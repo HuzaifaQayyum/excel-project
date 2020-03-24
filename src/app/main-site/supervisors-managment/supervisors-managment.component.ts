@@ -1,3 +1,4 @@
+import { SocketService } from './../../services/socket.service';
 import { ErrorService } from './../../services/Error.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
@@ -21,8 +22,9 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
   serverError?: boolean;
   serverMsg?: string;
   private subscriptions: Subscription[] = [];
+  newSupervisors: Supervisor[] = [ ];
 
-  constructor(private adminService: AdminService, private mainService: MainService, private errorService: ErrorService) { }
+  constructor(private adminService: AdminService, private mainService: MainService, private socketService: SocketService, private errorService: ErrorService) { }
 
   ngOnInit(): void {
     this.mainService.fetchSupervisors()
@@ -31,16 +33,46 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
         this.errorService.handle404(supervisors);
 
         this.supervisors = supervisors;
-      });
+      }, this.errorService.handleHttpError.bind(this.errorService));
 
-    const subscrption1 = this.errorService.onPageErrorAlert.subscribe(({ isServerError, msg }) => {
+
+    // Subscribing to Error Event
+    const subscription = this.errorService.onPageErrorAlert.subscribe(error => {
       if (this.isLoading) this.isLoading = false;
-      
-      this.serverError = isServerError;
-      this.serverMsg = msg;
-    });
 
-    this.subscriptions.push(subscrption1);
+      this.serverError = error.isServerError;
+      this.serverMsg = error.msg;
+    });
+    this.subscriptions.push(subscription);
+
+    // Realtime
+    this.socketService.connection.on('new-supervisor', this.onNewSupervisorEvent.bind(this));
+    this.socketService.connection.on('delete-supervisor', this.onDeleteSupervisorEvent.bind(this));
+    this.socketService.connection.on('update-supervisor', this.onUpdateSupervisorEvent.bind(this));
+  }
+
+  onNewSupervisorEvent(supervisor: Supervisor): void { 
+    this.newSupervisors.push(supervisor);
+  }
+
+  onDeleteSupervisorEvent(supervisor: Supervisor): void{ 
+    const deletedSupervisor = this.supervisors.find(e => e._id === supervisor._id);
+    if (deletedSupervisor) deletedSupervisor.deleted = true;
+  }
+
+  onUpdateSupervisorEvent(supervisor: Supervisor): void { 
+    let updatedSupervisorIndex = this.supervisors.findIndex(e => e._id === supervisor._id);
+    if (updatedSupervisorIndex > -1) { 
+      this.supervisors[updatedSupervisorIndex] = {  ...supervisor, updated: true }
+    };
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) subscription.unsubscribe();
+  }
+
+  trackByFn(index: number, item: Supervisor) {
+    return index;
   }
 
   onQuery(searchTxt: string): void {
@@ -49,21 +81,29 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
       name.toLowerCase().slice(0, searchTxt.length) === searchTxt.toLowerCase());
   }
 
+  updateSupervisorsArray(): void { 
+    for (const supervisor of this.newSupervisors) this.supervisors.unshift(supervisor);
+    this.newSupervisors = [];
+    this.errorService.clearErrorOnPage();
+  }
+
   onSupervisorDelete(_id: string): void {
     const confirmed = confirm(`Are you sure you want to delete this supervisor ?`);
     if (!confirmed) return;
 
     this.adminService.deleteSupervisor(_id)
-      .subscribe(_ => {
-        const indexToRemove = this.supervisors.findIndex(e => e._id === _id);
-        this.supervisors.splice(indexToRemove, 1);
-
-        this.errorService.handle404(this.supervisors);
-      });
+      .subscribe(_ => this.removeSupervisor(_id),
+        ({ status }: HttpErrorResponse) => {
+          if (status === 404)
+            this.removeSupervisor(_id);
+        });
   }
 
-  ngOnDestroy(): void {
-    for (const subscription of this.subscriptions) subscription.unsubscribe();
+  private removeSupervisor(_id: string): void {
+    const indexToRemove = this.supervisors.findIndex(e => e._id === _id);
+    this.supervisors.splice(indexToRemove, 1);
+
+    this.errorService.handle404(this.supervisors);
   }
 
 }

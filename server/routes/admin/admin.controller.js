@@ -16,6 +16,8 @@ exports.createSupervisor = async (req, res, next) => {
     const newSupervisor = new Supervisor({ name });
     await newSupervisor.save();
 
+    req.io.emit('new-supervisor', newSupervisor);
+
     return res.status(201).json(newSupervisor);
 };
 
@@ -28,6 +30,9 @@ exports.deleteSupervisor = async (req, res, next) => {
     await Entry.deleteMany({ $or: [ { from: supervisor._id }, { to: supervisor._id } ] });
 
     await supervisor.remove();
+
+    req.io.emit('delete-supervisor', supervisor);
+
     return res.status(200).json(supervisor);
 };
 
@@ -51,5 +56,7 @@ exports.updateSupervisor = async (req, res, next) => {
 
     await supervisor.set({ name }).save();
     
+    req.io.emit('update-supervisor', supervisor);
+
     return res.status(200).json(supervisor);
 };

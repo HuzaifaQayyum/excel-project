@@ -2,17 +2,17 @@ const mongoose = require('mongoose');
 
 const { mongodbUri } = require('../config/environment');
 
-module.exports = app => { 
-    const mongodbConfig = { 
-        useNewUrlParser: true, 
+module.exports = server => {
+    const mongodbConfig = {
+        useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false
     };
-
-    mongoose.connect(mongodbUri, mongodbConfig, err => { 
-        if (err) return console.log(`MongoDB error Occured\n${JSON.stringify(err)}`);
+    
+    mongoose.connect(mongodbUri, mongodbConfig, err => {
+        if (err) throw err;
 
         const port = process.env.PORT || 4000;
-        app.listen(port, _ => console.log(`Listening on port ${port}`));
+        server.listen(port);
     });
 };

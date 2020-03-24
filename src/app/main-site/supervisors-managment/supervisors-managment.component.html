@@ -1,3 +1,7 @@
+<div class="server-update" *ngIf="newSupervisors.length">
+  New Supervisors available <button (click)="updateSupervisorsArray()">Update</button>
+</div>
+
 <h2 class="center">Supervisor Managment</h2>
 
 <app-search (query)="onQuery($event)"></app-search>
@@ -14,7 +18,6 @@
 <ng-template #Loading>LOADING...</ng-template>
 
 <ng-template #mainArea>
-
   <div class="table-wrapper" *ngIf="!serverError">
     <table class="supevisor-data">
       <tr>
@@ -25,25 +28,30 @@
 
       <tr
         *ngFor="
-          let supervisor of isSearching ? filteredSupervisors : supervisors
+          let supervisor of isSearching ? filteredSupervisors : supervisors;
+          trackBy: trackByFn
         "
       >
-        <td>{{ supervisor.name }}</td>
-        <td
-          class="clickable"
-          routerLink="/supervisors-managment/update"
-          [queryParams]="{ _id: supervisor._id, name: supervisor.name }"
-        >
-          <i class="fa fa-pen"></i>
+        <td>
+          {{ supervisor.name }} <span class="deleted-element" *ngIf="supervisor.deleted || supervisor.updated">{{ supervisor.deleted ? "(Deleted)" : "(Updated)"}}</span>
         </td>
-        <td class="clickable" (click)="onSupervisorDelete(supervisor._id)">
-          <i class="fa fa-trash"></i>
-        </td>
+        <ng-container *ngIf="!supervisor.deleted">
+          <td
+            class="clickable"
+            routerLink="/supervisors-managment/update"
+            [queryParams]="{ _id: supervisor._id, name: supervisor.name }"
+          >
+            <i class="fa fa-pen"></i>
+          </td>
+          <td class="clickable" (click)="onSupervisorDelete(supervisor._id)">
+            <i class="fa fa-trash"></i>
+          </td>
+        </ng-container>
       </tr>
     </table>
   </div>
 
   <div *ngIf="serverError">
-    <h6 class="error"> {{ serverMsg }} </h6>
+    <h6 class="error">{{ serverMsg }}</h6>
   </div>
 </ng-template>

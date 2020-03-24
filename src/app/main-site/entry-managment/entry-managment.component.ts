@@ -26,7 +26,7 @@ export class EntryManagmentComponent implements OnInit, OnDestroy {
                 this.errorService.handle404(entries);
 
                 this.entries = entries;
-            });
+            }, this.errorService.handleHttpError.bind(this.errorService));
 
         const subscrption1 = this.errorService.onPageErrorAlert.subscribe(({ isServerError, msg }) => {
             if (this.isLoading) this.isLoading = false;
@@ -38,10 +38,6 @@ export class EntryManagmentComponent implements OnInit, OnDestroy {
         this.subscriptions.push(subscrption1);
     }
 
-    onQuery(searchTxt: string): void {
-        console.log(searchTxt);
-    }
-
     onDeleteEntry(_id: string): void {
         const confirmed = confirm(`Are you sure you want to delete this supervisor ?`);
         if (!confirmed) { return; }
@@ -50,11 +46,9 @@ export class EntryManagmentComponent implements OnInit, OnDestroy {
             .subscribe(_ => {
                 this.removeEntry(_id);
                 this.notificationService.add(`Entry deleted successfully.`);
-            }, ({ status, error: { errorMsg } }: HttpErrorResponse) => {
-                if (status === 404) {
+            }, ({ status }: HttpErrorResponse): void => {
+                if (status === 404)
                     this.removeEntry(_id);
-                    this.notificationService.add(errorMsg);
-                }
             });
     }
 
