@@ -10,11 +10,12 @@ export class AuthInterceptor implements HttpInterceptor {
 
     constructor(private authService: AuthService, private errorService: ErrorService) { }
 
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>{
-        const modifiedReq = req.clone({ 
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        const modifiedReq = req.clone({
             headers: req.headers.set('authorization', `Bearer ${this.authService.token}`)
-        })
+        });
         return next.handle(modifiedReq).pipe(
+
             catchError((error: HttpErrorResponse) => {
                 switch (error.status) {
                     case 401:
@@ -29,9 +30,11 @@ export class AuthInterceptor implements HttpInterceptor {
                         break;
                 }
 
+                this.errorService.handleHttpError(error);
+
                 return throwError(error);
               })
         );
-    } 
+    }
 
 }

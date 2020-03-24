@@ -1,4 +1,4 @@
-export interface EntryNonPopulated { 
+export interface EntryNonPopulated {
     _id?: string;
     date: string;
     noOfHrs: number;

@@ -3,7 +3,6 @@ import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { SharedValidator } from '../../shared.validator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     templateUrl: './change-password.component.html',
@@ -28,22 +27,22 @@ export class ChangePassordComponent implements OnInit {
             newPassword: new FormControl('', [SharedValidator.required, SharedValidator.minLength(5)]),
             confirmNewPassword: new FormControl('', [SharedValidator.required, SharedValidator.minLength(5)]),
             token: new FormControl(this.token)
-        }, { validators: SharedValidator.equalControlsValue('newPassword', 'confirmNewPassword', `Passwords Don't match`), updateOn: 'change' })
+        }, { validators: SharedValidator.equalControlsValue('newPassword', 'confirmNewPassword', `Passwords Don't match`), updateOn: 'change' });
     }
 
     onChangePassword(): void {
-        console.log(`form submitted`)
+        console.log(`form submitted`);
         this.isFormSubmitted = true;
-        if (this.changePasswordForm.invalid) return;
+        if (this.changePasswordForm.invalid) { return; }
 
         this.authService.changePassword(this.changePasswordForm.value)
             .subscribe(({ token }) => this.authService.saveTokenAndRedirect(token), ({ error: { errorMsg }, status }) => {
                 this.serverMsg = errorMsg;
                 this.isServerError = true;
-                if (status === 404) { 
+                if (status === 404) {
                     alert(`Invalid token or token already used. Redirect?`);
                     this.router.navigate(['/auth']);
-                 };
+                 }
             });
     }
 }

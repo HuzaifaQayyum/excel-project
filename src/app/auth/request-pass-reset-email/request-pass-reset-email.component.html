@@ -5,7 +5,7 @@
 
     <form [formGroup]="resetForm" (ngSubmit)="onResetRequest()">
         <div class="form-group">
-            <input type="text" placeholder="Enter email address" class="form-item" formControlName="email">
+            <input type="email" placeholder="Enter email address" class="form-item" formControlName="email">
             <div class="error" *ngIf="email.touched && email.errors">
                 <p class="error" *ngIf="email.errors.required">Email is required </p>
                 <p class="error" *ngIf="!email.errors.required && email.errors.regex">Invalid gmail account... </p>

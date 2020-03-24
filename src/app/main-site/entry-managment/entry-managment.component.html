@@ -18,14 +18,15 @@
   <button class="btn-add" routerLink="/entry-managment/add">+</button>
 </div>
 
-<div *ngIf="isLoading; then loadingTemplate; else EntriesDataTemplate"></div>
+<div *ngIf="isLoading; then loadingTemplate; else mainArea"></div>
 
 <ng-template #loadingTemplate>
   LOADING...
 </ng-template>
 
-<ng-template #EntriesDataTemplate>
-  <div class="table-wrapper">
+<ng-template #mainArea>
+
+  <div class="table-wrapper" *ngIf="!serverError">
     <table class="entries-data" *ngIf="entries.length; else NoDataTemplate">
       <tr>
         <th>From</th>
@@ -60,7 +61,9 @@
       </tr>
     </table>
   </div>
-  <ng-template #NoDataTemplate>
-    <h6 class="error">No data Found</h6>
-  </ng-template>
+
+  <div *ngIf="serverError">
+    <h6 class="error"> {{ serverMsg }} </h6>
+  </div>
+
 </ng-template>

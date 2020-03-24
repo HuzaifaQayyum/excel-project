@@ -24,7 +24,7 @@ export class DownloadReportComponent implements OnInit {
 
     onReportDownload(): void { 
         this.isFormSubmitted = true;
-        if (this.reportForm.invalid) return console.log(`Invalid form`);
+        if (this.reportForm.invalid) { return console.log(`Invalid form`); }
 
         this.mainService.downloadReport(this.reportForm.value);
     }

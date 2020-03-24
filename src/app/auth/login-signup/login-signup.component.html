@@ -7,10 +7,10 @@
 
         <h2 class="form-title"> {{ loginMode ? "Login" : "Create account" }} </h2>
 
-        <form [formGroup]="authForm" (ngSubmit)="onLoginSignup()">
+        <form [formGroup]="authForm" (ngSubmit)="onLoginSignup()" autocomplete="on">
 
             <div class="form-group">
-                <input type="text" placeholder="Enter email address" class="form-item" formControlName="email">
+                <input type="email" placeholder="Enter email address" class="form-item" formControlName="email">
                 <ng-container *ngIf="email.errors && (email.touched || isFormSubmitted)">
                     <span class="error" *ngIf="email.errors.required">Email is required</span>
                     <span class="error" *ngIf="!email.errors.required && email.errors.regex"> {{ email.errors.regex }} </span>
@@ -18,7 +18,7 @@
             </div>
 
             <div class="form-group">
-                <input type="text" placeholder="Enter password" class="form-item" formControlName="password">
+                <input type="password" placeholder="Enter password" class="form-item" formControlName="password">
                 <ng-container *ngIf="password.errors && (password.touched || isFormSubmitted)">
                     <span class="error" *ngIf="password.errors.required">password is required</span>
                     <span class="error" *ngIf="password.errors.minlength">password must be atleast {{ password.errors.minlength.requiredLength }} characters long</span>

@@ -1,13 +1,13 @@
 import { Subject } from 'rxjs';
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { Notification } from '../models/Notification';
 
 @Injectable({ providedIn: 'root' })
-export class NotificationService { 
+export class NotificationService {
     notificationAlert = new Subject<Notification>();
     private currentId = 1;
 
-    add(msg: string, title?: string): void { 
+    add(msg: string, title?: string): void {
         this.notificationAlert.next({ _id: this.currentId++, title, msg });
     }
 }

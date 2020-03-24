@@ -25,7 +25,7 @@ export class LoginSignupComponent implements OnInit, OnDestroy {
     this.authForm = new FormGroup({
       email: new FormControl('', [SharedValidator.required, SharedValidator.regex(/.@gmail\.com$/, 'Invalid gmail account.')]),
       password: new FormControl('', [Validators.minLength(5), Validators.required])
-    })
+    });
 
     this.subscriptions.push(this.authService.serverMsg.subscribe(msg => {
       this.serverMsg = msg;
@@ -34,13 +34,13 @@ export class LoginSignupComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.authService.isServerError.subscribe(isError => this.isServerError = isError));
   }
 
-  ngOnDestroy(): void { 
-    for (let subs of this.subscriptions) subs.unsubscribe();
+  ngOnDestroy(): void {
+    for (const subs of this.subscriptions) { subs.unsubscribe(); }
   }
 
   onLoginSignup(): void {
     this.isFormSubmitted = true;
-    if (this.authForm.invalid) return console.log(`Invalid form`);
+    if (this.authForm.invalid) { return console.log(`Invalid form`); }
 
     const authFunc = this.loginMode ? this.authService.login : this.authService.signup;
     authFunc.call(this.authService, this.authForm.value);

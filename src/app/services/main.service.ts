@@ -5,7 +5,7 @@ import { User } from '../models/User.model';
 import { Supervisor } from '../models/Supervisor.model';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Injector } from "@angular/core";
+import { Injectable, Injector } from '@angular/core';
 import * as jwt_decode from 'jwt-decode';
 import { saveAs } from 'file-saver';
 

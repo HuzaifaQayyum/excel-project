@@ -9,13 +9,14 @@
   <button class="btn-add" routerLink="/supervisors-managment/add">+</button>
 </div>
 
-<div *ngIf="isLoading; then Loading; else supervisorData"></div>
+<div *ngIf="isLoading; then Loading; else mainArea"></div>
 
 <ng-template #Loading>LOADING...</ng-template>
 
-<ng-template #supervisorData>
-  <div class="table-wrapper">
-    <table class="supevisor-data" *ngIf="supervisors.length; else NoDataFound">
+<ng-template #mainArea>
+
+  <div class="table-wrapper" *ngIf="!serverError">
+    <table class="supevisor-data">
       <tr>
         <th>Name</th>
         <th>Edit</th>
@@ -42,7 +43,7 @@
     </table>
   </div>
 
-  <ng-template #NoDataFound>
-    <h6 class="error">No data Found</h6>
-  </ng-template>
+  <div *ngIf="serverError">
+    <h6 class="error"> {{ serverMsg }} </h6>
+  </div>
 </ng-template>

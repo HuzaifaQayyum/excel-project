@@ -1,4 +1,4 @@
-export interface Supervisor { 
+export interface Supervisor {
     _id?: string;
     name: string;
 }

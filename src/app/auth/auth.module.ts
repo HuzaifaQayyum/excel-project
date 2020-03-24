@@ -4,11 +4,11 @@ import { RequestPasswordResetComponent } from './request-pass-reset-email/reques
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthRoutingModule } from './auth-routing.module';
-import { NgModule } from "@angular/core";
+import { NgModule } from '@angular/core';
 import { LoginSignupComponent } from './login-signup/login-signup.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
-@NgModule({ 
+@NgModule({
     declarations: [
         LoginSignupComponent,
         RequestPasswordResetComponent,

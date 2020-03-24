@@ -1,7 +1,7 @@
 import { MainService } from './main.service';
 import { User } from '../models/User.model';
 import { Subject, Observable } from 'rxjs';
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as jwt_decode from 'jwt-decode';
 import { Router } from '@angular/router';
@@ -20,7 +20,7 @@ export class AuthService {
 
     get token(): string { return localStorage.getItem('token') || null; }
     get authenticated(): boolean { return this._authenticated; }
-    set authenticated(authenticated: boolean) { this._authenticated = authenticated }
+    set authenticated(authenticated: boolean) { this._authenticated = authenticated; }
 
     constructor(private mainService: MainService, private http: HttpClient, private router: Router) { }
 
@@ -47,7 +47,7 @@ export class AuthService {
 
     requestResetPasswordEmail(formData: { email: string }): Observable<{ msg: string }> {
         return this.http.post<{ msg: string }>(this.url + '/request-password-reset', formData);
-    };
+    }
 
     changePassword(formData: { token: string, newPassword: string, confirmNewPassword: string }): Observable<{ token: string }> {
         return this.http.put<{ token: string }>(this.url + '/reset-password', formData);

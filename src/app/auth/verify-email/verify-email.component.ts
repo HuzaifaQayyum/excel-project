@@ -16,14 +16,14 @@ export class VerifyEmailComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private authService: AuthService) { }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.token = this.route.snapshot.paramMap.get('token');
 
     this.authService.verifyEmail(this.token)
-      .subscribe(({ token }) => { 
-        this.authService.saveTokenAndRedirect(token)
-      }, ({ status }) => { 
-        if (status === 422) { 
+      .subscribe(({ token }) => {
+        this.authService.saveTokenAndRedirect(token);
+      }, ({ status }) => {
+        if (status === 422) {
           this.serverMsg = 'Invalid Url or already used token.';
           this.isServerError = true;
         }

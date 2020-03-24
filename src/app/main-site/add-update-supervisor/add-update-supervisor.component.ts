@@ -34,7 +34,7 @@ export class AddUpdateSupervisor implements OnInit {
 
     this.newSupervisorForm = new FormGroup({
       name: new FormControl(name, SharedValidator.required)
-    })
+    });
   }
 
   resetSupervisorData(): void {
@@ -43,7 +43,7 @@ export class AddUpdateSupervisor implements OnInit {
   }
 
   private onSupervisorFormSubmitted(msg: string): void {
-    if (this.serverMsg) this.serverMsg = '';
+    if (this.serverMsg) { this.serverMsg = ''; }
 
     this.notificationService.add(msg);
 
@@ -57,19 +57,21 @@ export class AddUpdateSupervisor implements OnInit {
 
   onCreateSupervisor(): void {
     this.isFormSubmitted = true;
-    if (this.newSupervisorForm.invalid) return;
+    if (this.newSupervisorForm.invalid) { return; }
 
-    if (this.isEditing)
+    if (this.isEditing) {
       this.adminService.updateSupervisor(this._id, this.newSupervisorForm.value)
         .subscribe(_ => {
           this.onSupervisorFormSubmitted(`Supervisor updated successfully`);
           this.router.navigate(['/supervisors-managment']);
         }, e => this.onSupervisorFormSubmittedError(e));
+    }
 
 
-    else
+    else {
       this.adminService.createSupervisor(this.newSupervisorForm.value)
         .subscribe(_ => this.onSupervisorFormSubmitted(`Supervisor added successfully`), (e => this.onSupervisorFormSubmittedError(e)));
+    }
   }
 
 }

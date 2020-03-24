@@ -21,7 +21,7 @@ export class SharedValidator {
 
     static fileSize(maximumSizeInKb: number, errorMsg = `file is too large`): ValidatorFn {
         return ({ value }: AbstractControl): ValidationErrors | null => {
-            if (!value) return null;
+            if (!value) { return null; }
             const fileSize = (value as File).size / 1000; // in kilo bytes
             return fileSize <= maximumSizeInKb ? null : { fileSize: errorMsg };
         };
@@ -36,11 +36,11 @@ export class SharedValidator {
             const isMatch = controlTwo.value === controlOne.value;
 
             if ((!isMatch) && controlOne.valid && controlTwo.valid) {
-                controlTwo.setErrors({ notEqual: errorMsg || `Values Not match` })
+                controlTwo.setErrors({ notEqual: errorMsg || `Values Not match` });
             }
 
             return null;
-        }
+        };
     }
 
     static isInt({ value }: AbstractControl): ValidationErrors | null {
