@@ -10,4 +10,6 @@ export interface Entry {
         _id: string;
         name: string;
     };
+    deleted?: boolean;
+    updated?: boolean;
 }

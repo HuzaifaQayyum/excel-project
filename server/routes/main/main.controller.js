@@ -21,7 +21,12 @@ exports.createEntry = async (req, res, next) => {
     const entry = new Entry({ date, noOfHrs, from, to });
     await entry.save();
 
-    return res.status(200).json(entry);
+    await Entry.populate(entry, { path: 'from', select: 'name 1' });
+    await Entry.populate(entry, { path: 'to', select: 'name 1' });
+
+    req.io.emit('new-entry', entry);
+
+    return res.status(201).json(entry);
 };
 
 
@@ -45,6 +50,8 @@ exports.deleteEntry = async (req, res, next) => {
     const entry = await Entry.findOneAndDelete({ _id });
     if (!entry) return res.status(404).json({ errorMsg: `Entry not found.` });
     
+    req.io.emit('delete-entry', entry);
+
     return res.status(200).json(entry);
 }
 
@@ -79,7 +86,12 @@ exports.updateEntry = async (req, res, next) => {
     });
     await entry.save();
 
-    return res.json(entry);
+    await Entry.populate(entry, { path: 'from', select: 'name 1' });
+    await Entry.populate(entry, { path: 'to', select: 'name 1' });
+
+    req.io.emit('update-entry', entry);
+
+    return res.status(200).json(entry);
 };
 
 exports.getReport = async (req, res, next) => {

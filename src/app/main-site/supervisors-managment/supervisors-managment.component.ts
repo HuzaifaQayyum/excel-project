@@ -22,7 +22,7 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
   serverError?: boolean;
   serverMsg?: string;
   private subscriptions: Subscription[] = [];
-  newSupervisors: Supervisor[] = [ ];
+  newSupervisors: Supervisor[] = [];
 
   constructor(private adminService: AdminService, private mainService: MainService, private socketService: SocketService, private errorService: ErrorService) { }
 
@@ -51,20 +51,18 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
     this.socketService.connection.on('update-supervisor', this.onUpdateSupervisorEvent.bind(this));
   }
 
-  onNewSupervisorEvent(supervisor: Supervisor): void { 
+  private onNewSupervisorEvent(supervisor: Supervisor): void {
     this.newSupervisors.push(supervisor);
   }
 
-  onDeleteSupervisorEvent(supervisor: Supervisor): void{ 
+  private onDeleteSupervisorEvent(supervisor: Supervisor): void {
     const deletedSupervisor = this.supervisors.find(e => e._id === supervisor._id);
     if (deletedSupervisor) deletedSupervisor.deleted = true;
   }
 
-  onUpdateSupervisorEvent(supervisor: Supervisor): void { 
+  private onUpdateSupervisorEvent(supervisor: Supervisor): void {
     let updatedSupervisorIndex = this.supervisors.findIndex(e => e._id === supervisor._id);
-    if (updatedSupervisorIndex > -1) { 
-      this.supervisors[updatedSupervisorIndex] = {  ...supervisor, updated: true }
-    };
+    if (updatedSupervisorIndex > -1) this.supervisors[updatedSupervisorIndex] = { ...supervisor, updated: true };
   }
 
   ngOnDestroy(): void {
@@ -81,9 +79,10 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
       name.toLowerCase().slice(0, searchTxt.length) === searchTxt.toLowerCase());
   }
 
-  updateSupervisorsArray(): void { 
+  updateSupervisorsArray(): void {
     for (const supervisor of this.newSupervisors) this.supervisors.unshift(supervisor);
     this.newSupervisors = [];
+
     this.errorService.clearErrorOnPage();
   }
 

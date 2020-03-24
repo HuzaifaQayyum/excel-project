@@ -186,6 +186,30 @@ table tr:hover {
   font-size: 15px;
 }
 
+.server-update { 
+  background:#18a518;
+  color: #fff;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 4vh;
+}
+
+.server-update button { 
+  background: #105810;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.server-update button:hover { 
+  background: #0a410a;
+}
+
+
+
+
 /*  */
 
 @media only screen and (max-width: 1040px) {

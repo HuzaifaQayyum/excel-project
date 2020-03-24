@@ -1,3 +1,7 @@
+<div class="server-update" *ngIf="newEntries.length">
+  New Entries available <button (click)="updateEntriesArray()">Update</button>
+</div>
+
 <h2 class="center">Entries Managment</h2>
 
 <!-- <form class="entry-search">
@@ -25,7 +29,6 @@
 </ng-template>
 
 <ng-template #mainArea>
-
   <div class="table-wrapper" *ngIf="!serverError">
     <table class="entries-data">
       <tr>
@@ -37,33 +40,39 @@
         <th>Delete</th>
       </tr>
       <tr *ngFor="let entry of entries">
-        <td>{{ entry.from.name }}</td>
+        <td>
+          {{ entry.from.name }}
+          <span class="deleted-element" *ngIf="entry.deleted || entry.updated">
+            {{ entry.deleted ? "(Deleted)" : "(updated)" }}
+          </span>
+        </td>
         <td>{{ entry.to.name }}</td>
         <td>{{ entry.noOfHrs }}</td>
         <td>{{ entry.date | date: "fullDate" }}</td>
-        <td
-          class="clickable"
-          routerLink="/entry-managment/update"
-          [queryParams]="{
-            updating: true,
-            _id: entry._id,
-            from: entry.from._id,
-            to: entry.to._id,
-            noOfHrs: entry.noOfHrs,
-            date: entry.date
-          }"
-        >
-          <i class="fa fa-edit"></i>
-        </td>
-        <td class="clickable" (click)="onDeleteEntry(entry._id)">
-          <i class="fa fa-trash"></i>
-        </td>
+        <ng-container *ngIf="!entry.deleted">
+          <td
+            class="clickable"
+            routerLink="/entry-managment/update"
+            [queryParams]="{
+              updating: true,
+              _id: entry._id,
+              from: entry.from._id,
+              to: entry.to._id,
+              noOfHrs: entry.noOfHrs,
+              date: entry.date
+            }"
+          >
+            <i class="fa fa-edit"></i>
+          </td>
+          <td class="clickable" (click)="onDeleteEntry(entry._id)">
+            <i class="fa fa-trash"></i>
+          </td>
+        </ng-container>
       </tr>
     </table>
   </div>
 
   <div *ngIf="serverError">
-    <h6 class="error"> {{ serverMsg }} </h6>
+    <h6 class="error">{{ serverMsg }}</h6>
   </div>
-
 </ng-template>

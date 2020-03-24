@@ -73,13 +73,17 @@
     padding:10px 0;
     width: 100%;
     border: none;
-    background: var(--primary-color);
+    background: #2A4365;
     color: #fff;
-    transition: background-color .2s ease;
+    transition: background-color .2s ease-out;
 }
 
 .sub-btn:disabled { 
-    background: var(--disabled-color-accent);
+    background: #2A4365;
+}
+
+.sub-btn:not(:disabled):hover { 
+    background: #1f3452;
 }
 
 .info { 

@@ -1,3 +1,4 @@
+import { SocketService } from './../../services/socket.service';
 import { ErrorService } from './../../services/Error.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NotificationService } from './../../services/notification.service';
@@ -16,8 +17,9 @@ export class EntryManagmentComponent implements OnInit, OnDestroy {
     serverError?: boolean;
     serverMsg?: string;
     private subscriptions: Subscription[] = [];
+    newEntries: Entry[] = [];
 
-    constructor(private mainService: MainService, private notificationService: NotificationService, private errorService: ErrorService) { }
+    constructor(private mainService: MainService, private notificationService: NotificationService, private errorService: ErrorService, private socketService: SocketService) { }
 
     ngOnInit(): void {
         this.mainService.fetchEntries()
@@ -36,6 +38,32 @@ export class EntryManagmentComponent implements OnInit, OnDestroy {
         });
 
         this.subscriptions.push(subscrption1);
+
+        // Realtime updates
+        this.socketService.connection.on('new-entry', this.onNewEntryEvent.bind(this));
+        this.socketService.connection.on('delete-entry', this.onDeleteEntryEvent.bind(this));
+        this.socketService.connection.on('update-entry', this.onUpdateEntryEvent.bind(this));
+    }
+
+    private onNewEntryEvent(entry: Entry): void {
+        this.newEntries.push(entry);
+    }
+
+    private onDeleteEntryEvent(entry: Entry): void {
+        const deletedEntry = this.entries.find(e => e._id === entry._id);
+        if (deletedEntry) deletedEntry.deleted = true;
+    }
+
+    private onUpdateEntryEvent(entry: Entry): void { 
+        const updatedEntryIndex = this.entries.findIndex(e => e._id === entry._id);
+        if (updatedEntryIndex > -1) this.entries[updatedEntryIndex] = { ...entry, updated: true };
+    }
+
+    updateEntriesArray(): void {
+        for (const entry of this.newEntries) this.entries.unshift(entry);
+        this.newEntries = [];
+
+        this.errorService.clearErrorOnPage();
     }
 
     onDeleteEntry(_id: string): void {
