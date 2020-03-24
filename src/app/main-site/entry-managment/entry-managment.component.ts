@@ -23,7 +23,7 @@ export class EntryManagmentComponent implements OnInit, OnDestroy {
         this.mainService.fetchEntries()
             .subscribe(entries => {
                 this.isLoading = false;
-                this.errorService.handle404(this.entries);
+                this.errorService.handle404(entries);
 
                 this.entries = entries;
             });

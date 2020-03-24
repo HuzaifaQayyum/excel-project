@@ -15,7 +15,6 @@ export class AuthInterceptor implements HttpInterceptor {
             headers: req.headers.set('authorization', `Bearer ${this.authService.token}`)
         });
         return next.handle(modifiedReq).pipe(
-
             catchError((error: HttpErrorResponse) => {
                 switch (error.status) {
                     case 401:
