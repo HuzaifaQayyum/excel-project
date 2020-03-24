@@ -1,0 +1,49 @@
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { SharedValidator } from '../../shared.validator';
+import { FormGroup, FormControl, AbstractControl, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+
+@Component({
+  templateUrl: './login-signup.component.html',
+  styleUrls: ['../shared-css/form.css', './login-signup.component.css']
+})
+export class LoginSignupComponent implements OnInit, OnDestroy {
+  authForm: FormGroup;
+  isServerError: boolean;
+  serverMsg: string;
+  loginMode = true;
+  isFormSubmitted = false;
+  private subscriptions: Subscription[] = [];
+
+  get email(): AbstractControl { return this.authForm.get('email'); }
+  get password(): AbstractControl { return this.authForm.get('password'); }
+
+  constructor(private authService: AuthService) { }
+
+  ngOnInit(): void {
+    this.authForm = new FormGroup({
+      email: new FormControl('', [SharedValidator.required, SharedValidator.regex(/.@gmail\.com$/, 'Invalid gmail account.')]),
+      password: new FormControl('', [Validators.minLength(5), Validators.required])
+    })
+
+    this.subscriptions.push(this.authService.serverMsg.subscribe(msg => {
+      this.serverMsg = msg;
+      if (!this.isServerError) { this.authForm.reset(); this.isFormSubmitted = false; }
+    }));
+    this.subscriptions.push(this.authService.isServerError.subscribe(isError => this.isServerError = isError));
+  }
+
+  ngOnDestroy(): void { 
+    for (let subs of this.subscriptions) subs.unsubscribe();
+  }
+
+  onLoginSignup(): void {
+    this.isFormSubmitted = true;
+    if (this.authForm.invalid) return console.log(`Invalid form`);
+
+    const authFunc = this.loginMode ? this.authService.login : this.authService.signup;
+    authFunc.call(this.authService, this.authForm.value);
+  }
+
+}

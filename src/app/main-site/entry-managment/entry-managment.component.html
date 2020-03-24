@@ -1,0 +1,66 @@
+<h2 class="center">Entries Managment</h2>
+
+<!-- <form class="entry-search">
+    <div class="form-group">
+        <label>From</label>
+        <input type="date" >
+    </div>
+    <div class="control">
+        <label>To</label>
+        <input type="date" >
+    </div>
+</form> -->
+
+<hr class="divider" />
+
+<div class="add-new">
+  <h4>Add new Entry</h4>
+  <button class="btn-add" routerLink="/entry-managment/add">+</button>
+</div>
+
+<div *ngIf="isLoading; then loadingTemplate; else EntriesDataTemplate"></div>
+
+<ng-template #loadingTemplate>
+  LOADING...
+</ng-template>
+
+<ng-template #EntriesDataTemplate>
+  <div class="table-wrapper">
+    <table class="entries-data" *ngIf="entries.length; else NoDataTemplate">
+      <tr>
+        <th>From</th>
+        <th>To</th>
+        <th>No. of hours</th>
+        <th>Date</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+      <tr *ngFor="let entry of entries">
+        <td>{{ entry.from.name }}</td>
+        <td>{{ entry.to.name }}</td>
+        <td>{{ entry.noOfHrs }}</td>
+        <td>{{ entry.date | date: "fullDate" }}</td>
+        <td
+          class="clickable"
+          routerLink="/entry-managment/update"
+          [queryParams]="{
+            updating: true,
+            _id: entry._id,
+            from: entry.from._id,
+            to: entry.to._id,
+            noOfHrs: entry.noOfHrs,
+            date: entry.date
+          }"
+        >
+          <i class="fa fa-edit"></i>
+        </td>
+        <td class="clickable" (click)="onDeleteEntry(entry._id)">
+          <i class="fa fa-trash"></i>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <ng-template #NoDataTemplate>
+    <h6 class="error">No data Found</h6>
+  </ng-template>
+</ng-template>
