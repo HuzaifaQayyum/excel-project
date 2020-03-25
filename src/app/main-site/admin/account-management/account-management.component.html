@@ -29,7 +29,7 @@
         <th>Edit</th>
         <th>Delete</th>
       </tr>
-      <tr *ngFor="let account of accounts">
+      <tr *ngFor="let account of isQuerying ? filteredAccounts : accounts">
         <td class="left">
           {{ account.email }}
           <span

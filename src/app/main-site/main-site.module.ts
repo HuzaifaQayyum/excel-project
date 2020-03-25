@@ -8,6 +8,7 @@ import { NgModule } from '@angular/core';
 import { NotificationComponent } from './notification/notification.component';
 import { SharedModule } from '../shared-components/shared.module';
 import { AddUpdateEntryComponent } from './entry-managment/add-update-entry/add-update-entry.component';
+import { CustomPipes } from '../pipes/pipe.module';
 
 @NgModule({
     declarations: [
@@ -22,7 +23,8 @@ import { AddUpdateEntryComponent } from './entry-managment/add-update-entry/add-
         MainSiteRoutingModule,
         ReactiveFormsModule,
         FormsModule,
-        SharedModule
+        SharedModule,
+        CustomPipes
     ]
 })
 export class MainSiteModule { }

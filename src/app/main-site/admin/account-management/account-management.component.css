@@ -1,6 +1,6 @@
 .accounts-data th:first-child,
 .accounts-data td:first-child { 
-    /* min-width: 40vw; */
+    width: 10vw;
 }
 
 .clickable:hover i { 

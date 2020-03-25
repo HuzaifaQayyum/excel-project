@@ -26,7 +26,7 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.mainService.fetchSupervisors()
-      .subscribe(supervisors => { 
+      .subscribe(supervisors => {
         this.isLoading = false;
         this.errorService.handle404(supervisors);
 
@@ -72,9 +72,15 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
   }
 
   onQuery(searchTxt: string): void {
-    this.isSearching = searchTxt.length > 0;
-    this.filteredSupervisors = this.supervisors.filter(({ name }) =>
-      name.toLowerCase().slice(0, searchTxt.length) === searchTxt.toLowerCase());
+    if (!searchTxt) {
+      this.isSearching = false;
+      this.errorService.handle404(this.supervisors);
+      return;
+    }
+
+    this.filteredSupervisors = this.supervisors.filter(it => it.name.slice(0, searchTxt.length).toLowerCase() === searchTxt.toLowerCase());
+    this.errorService.handle404(this.filteredSupervisors);
+    this.isSearching = true;
   }
 
   updateSupervisorsArray(): void {

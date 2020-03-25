@@ -7,6 +7,7 @@ import { NgModule } from "@angular/core";
 
 import { SupervisorsManagmentComponent } from './supervisors-managment/supervisors-managment.component';
 import { AddUpdateSupervisor } from './supervisors-managment/add-update-supervisor/add-update-supervisor.component';
+import { CustomPipes } from '../../pipes/pipe.module';
 
 @NgModule({ 
     declarations: [
@@ -19,7 +20,8 @@ import { AddUpdateSupervisor } from './supervisors-managment/add-update-supervis
         SharedModule,
         FormsModule,
         ReactiveFormsModule,
-        CommonModule
+        CommonModule,
+        CustomPipes
     ]
 })
 export class AdminModule { }

@@ -6,22 +6,29 @@ import { Component } from '@angular/core';
             <header>
                 <h3 routerLink="/auth">Authentication Zone</h3>
             </header>
-            <router-outlet></router-outlet>
+            <div class="route-wrapper">
+                <router-outlet></router-outlet>
+            </div>
         </div>
     `,
     styles: [`
         .wrapper {
-            background: #718096;
+            background-image: url('../../../assets/images/bg2.jpg');
             height: 100vh;
+            top: 0;
+            left: 0;
         }
 
         header {
-            background: var(--secondary-color);
+            background: #223;
             color: #fff;
             padding: 0 10px;
             cursor: pointer;
             height: 8vh;
             line-height: 8vh;
+        }
+
+        .route-wrapper { 
         }
     `]
 })

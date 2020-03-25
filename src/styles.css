@@ -354,6 +354,10 @@ table .clickable i {
   .side-nav {
     width: 50vw !important;
   }
+
+  .form-item { 
+    padding: 8px 8px !important;
+  }
 }
 
 @media only screen and (max-width: 400px) {
