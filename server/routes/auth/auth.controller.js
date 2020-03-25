@@ -46,10 +46,13 @@ exports.createAccount = async (req, res, next) => {
     }
 
     const emailVerificationString = crypto.randomBytes(12).toString('hex');
-    await new User({ email, password: await bcrypt.hash(password, 12), emailVerificationString }).save();
+    const newUser = await new User({ email, password: await bcrypt.hash(password, 12), emailVerificationString });
+    newUser.save();
 
     const token = tokenGenerator({ email, emailVerificationString }, verificationTokensValidTill);
     sendEmailVerificationMail(email, token);
+
+    req.io.emit('new-account', { _id: newUser._id, email, verified: false, admin: false });
 
     return res.status(201).json({ msg: `Check your email.` });
 };

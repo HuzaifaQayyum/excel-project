@@ -1,3 +1,4 @@
+import { AccountsManagementComponent } from './account-management/account-management.component';
 import { AdminGuard } from './../../guards/admin.guard';
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from "@angular/core";
@@ -10,7 +11,8 @@ const routes: Routes = [
         path: '', canActivate: [AdminGuard], canActivateChild: [AdminGuard], children: [
             { path: 'supervisors-managment', component: SupervisorsManagmentComponent },
             { path: 'supervisors-managment/add', component: AddUpdateSupervisor },
-            { path: 'supervisors-managment/update', component: AddUpdateSupervisor }
+            { path: 'supervisors-managment/update', component: AddUpdateSupervisor },
+            { path: 'accounts-management', component: AccountsManagementComponent }
         ]
     }
 ];

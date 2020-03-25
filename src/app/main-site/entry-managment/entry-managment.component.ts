@@ -50,8 +50,8 @@ export class EntryManagmentComponent implements OnInit, OnDestroy {
     }
 
     private onDeleteEntryEvent(entry: Entry): void {
-        const deletedEntry = this.entries.find(e => e._id === entry._id);
-        if (deletedEntry) { deletedEntry.deleted = true; }
+        const deletedEntry = this.entries.find(e => e._id === entry._id) || this.newEntries.find(e => e._id === entry._id);
+        if (deletedEntry) deletedEntry.deleted = true;
     }
 
     private onUpdateEntryEvent(entry: Entry): void {

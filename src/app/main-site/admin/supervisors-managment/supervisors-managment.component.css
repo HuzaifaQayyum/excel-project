@@ -1,40 +1,6 @@
-.add-new { 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 4vh;
-    overflow: hidden;
-}
-
-.supevisor-data { 
-    width: 100%;
-    border: 1px solid grey;
-    border-collapse: collapse;
-    background: #fff;
-    border-radius: 5px;
-    border-radius: 5px;
-    overflow: hidden;
-    margin-top: 4vh;
-}
-
-.supevisor-data th,
-.supevisor-data td { 
-    padding: 15px 10px;
-    text-align: center;
-}
-
 .supevisor-data th:first-child,
 .supevisor-data td:first-child { 
-    text-align: left;
-    width: 60%;
-}
-
-.clickable { 
-    cursor: pointer;
-}
-
-.clickable i { 
-    transition: color .1s ease-in;
+    width: 40vw;
 }
 
 .clickable:hover i { 
@@ -47,8 +13,4 @@
 
 .supevisor-data .clickable:last-child:hover i {
     color: #d83030 !important;
-}
-
-.deleted td { 
-    width: 100%;
 }

@@ -36,7 +36,7 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
 
     // Subscribing to Error Event
     const subscription = this.errorService.onPageErrorAlert.subscribe(error => {
-      if (this.isLoading) { this.isLoading = false; }
+      if (this.isLoading) this.isLoading = false;
 
       this.serverError = error.isServerError;
       this.serverMsg = error.msg;
@@ -54,8 +54,8 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
   }
 
   private onDeleteSupervisorEvent(supervisor: Supervisor): void {
-    const deletedSupervisor = this.supervisors.find(e => e._id === supervisor._id);
-    if (deletedSupervisor) { deletedSupervisor.deleted = true; }
+    const deletedSupervisor = this.supervisors.find(e => e._id === supervisor._id) || this.newSupervisors.find(e => e._id === supervisor._id);
+    if (deletedSupervisor) deletedSupervisor.deleted = true;
   }
 
   private onUpdateSupervisorEvent(supervisor: Supervisor): void {
@@ -91,9 +91,7 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
     this.adminService.deleteSupervisor(_id)
       .subscribe(_ => this.removeSupervisor(_id),
         ({ status }: HttpErrorResponse) => {
-          if (status === 404) {
-            this.removeSupervisor(_id);
-          }
+          if (status === 404) this.removeSupervisor(_id);
         });
   }
 

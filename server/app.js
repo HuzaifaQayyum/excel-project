@@ -28,16 +28,6 @@ require('./startup/db')(server);
 
 server.addListener('listening', _ => console.log(`Listening Now...`));
 
-// To reduce number of connections, only authenticated(Verified) users are allowed to connect.
-io
-    .use((socket, next) => {
-        const token = socket.handshake.query.token;
-        jwt.verify(token, jwtPassword, (err, decoded) => {
-            if (err || (!decoded.verified)) return next(new Error(`Unauthenticated`));
-
-            return next();
-        });
-    })
-    .on('connect', socket => {
-        console.log(`User connected`);
-    });
+io.on('connect', socket => {
+    console.log(`User connected`);
+});

@@ -8,7 +8,7 @@
 
 <hr class="divider" />
 
-<div class="add-new">
+<div class="add-new-wrapper">
   <h4>Add new Supervisor</h4>
   <button class="btn-add" routerLink="/admin/supervisors-managment/add">+</button>
 </div>
@@ -19,9 +19,9 @@
 
 <ng-template #mainArea>
   <div class="table-wrapper" *ngIf="!serverError">
-    <table class="supevisor-data">
+    <table class="table-container supevisor-data">
       <tr>
-        <th>Name</th>
+        <th class="left">Name</th>
         <th>Edit</th>
         <th>Delete</th>
       </tr>
@@ -32,7 +32,7 @@
           trackBy: trackByFn
         "
       >
-        <td>
+        <td class="left">
           {{ supervisor.name }} <span class="modified-element" *ngIf="supervisor.deleted || supervisor.updated">{{ supervisor.deleted ? "(Deleted)" : "(Updated)"}}</span>
         </td>
         <ng-container *ngIf="!supervisor.deleted">

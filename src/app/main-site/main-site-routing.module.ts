@@ -14,7 +14,7 @@ const routes: Routes = [
         { path: 'entry-managment', component: EntryManagmentComponent },
         { path: 'download-report', component: DownloadReportComponent },
         { path: 'admin', canLoad: [AdminGuard], loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
-        { path: '**', redirectTo: '/entry-managment' }
+        { path: '**', redirectTo: '/admin/accounts-management' }
     ]}
 ];
 

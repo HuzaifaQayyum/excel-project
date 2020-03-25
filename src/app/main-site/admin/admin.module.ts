@@ -1,3 +1,4 @@
+import { AccountsManagementComponent } from './account-management/account-management.component';
 import { CommonModule } from '@angular/common';
 import { AdminRoutingModule } from './admin-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -10,7 +11,8 @@ import { AddUpdateSupervisor } from './supervisors-managment/add-update-supervis
 @NgModule({ 
     declarations: [
         SupervisorsManagmentComponent,
-        AddUpdateSupervisor
+        AddUpdateSupervisor,
+        AccountsManagementComponent
     ],
     imports: [
         AdminRoutingModule,
