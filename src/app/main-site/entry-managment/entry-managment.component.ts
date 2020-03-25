@@ -31,7 +31,7 @@ export class EntryManagmentComponent implements OnInit, OnDestroy {
             }, this.errorService.handleHttpError.bind(this.errorService));
 
         const subscrption1 = this.errorService.onPageErrorAlert.subscribe(({ isServerError, msg }) => {
-            if (this.isLoading) this.isLoading = false;
+            if (this.isLoading) { this.isLoading = false; }
 
             this.serverError = isServerError;
             this.serverMsg = msg;
@@ -51,16 +51,16 @@ export class EntryManagmentComponent implements OnInit, OnDestroy {
 
     private onDeleteEntryEvent(entry: Entry): void {
         const deletedEntry = this.entries.find(e => e._id === entry._id);
-        if (deletedEntry) deletedEntry.deleted = true;
+        if (deletedEntry) { deletedEntry.deleted = true; }
     }
 
-    private onUpdateEntryEvent(entry: Entry): void { 
+    private onUpdateEntryEvent(entry: Entry): void {
         const updatedEntryIndex = this.entries.findIndex(e => e._id === entry._id);
-        if (updatedEntryIndex > -1) this.entries[updatedEntryIndex] = { ...entry, updated: true };
+        if (updatedEntryIndex > -1) { this.entries[updatedEntryIndex] = { ...entry, updated: true }; }
     }
 
     updateEntriesArray(): void {
-        for (const entry of this.newEntries) this.entries.unshift(entry);
+        for (const entry of this.newEntries) { this.entries.unshift(entry); }
         this.newEntries = [];
 
         this.errorService.clearErrorOnPage();
@@ -75,8 +75,9 @@ export class EntryManagmentComponent implements OnInit, OnDestroy {
                 this.removeEntry(_id);
                 this.notificationService.add(`Entry deleted successfully.`);
             }, ({ status }: HttpErrorResponse): void => {
-                if (status === 404)
+                if (status === 404) {
                     this.removeEntry(_id);
+                }
             });
     }
 
@@ -88,6 +89,6 @@ export class EntryManagmentComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        for (const subscription of this.subscriptions) subscription.unsubscribe();
+        for (const subscription of this.subscriptions) { subscription.unsubscribe(); }
     }
 }

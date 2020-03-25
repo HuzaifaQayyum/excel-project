@@ -1,11 +1,9 @@
-import { SocketService } from './../../services/socket.service';
-import { ErrorService } from './../../services/Error.service';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
-import { MainService } from './../../services/main.service';
-import { AdminService } from './../../services/admin.service';
+import { SocketService } from '../../../services/socket.service';
+import { ErrorService } from '../../../services/Error.service';
+import { MainService } from '../../../services/main.service';
+import { AdminService } from '../../../services/admin.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Supervisor } from '../../models/supervisor.model';
+import { Supervisor } from '../../../models/supervisor.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 
@@ -28,7 +26,7 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.mainService.fetchSupervisors()
-      .subscribe(supervisors => {
+      .subscribe(supervisors => { 
         this.isLoading = false;
         this.errorService.handle404(supervisors);
 
@@ -38,7 +36,7 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
 
     // Subscribing to Error Event
     const subscription = this.errorService.onPageErrorAlert.subscribe(error => {
-      if (this.isLoading) this.isLoading = false;
+      if (this.isLoading) { this.isLoading = false; }
 
       this.serverError = error.isServerError;
       this.serverMsg = error.msg;
@@ -57,16 +55,16 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
 
   private onDeleteSupervisorEvent(supervisor: Supervisor): void {
     const deletedSupervisor = this.supervisors.find(e => e._id === supervisor._id);
-    if (deletedSupervisor) deletedSupervisor.deleted = true;
+    if (deletedSupervisor) { deletedSupervisor.deleted = true; }
   }
 
   private onUpdateSupervisorEvent(supervisor: Supervisor): void {
-    let updatedSupervisorIndex = this.supervisors.findIndex(e => e._id === supervisor._id);
-    if (updatedSupervisorIndex > -1) this.supervisors[updatedSupervisorIndex] = { ...supervisor, updated: true };
+    const updatedSupervisorIndex = this.supervisors.findIndex(e => e._id === supervisor._id);
+    if (updatedSupervisorIndex > -1) { this.supervisors[updatedSupervisorIndex] = { ...supervisor, updated: true }; }
   }
 
   ngOnDestroy(): void {
-    for (const subscription of this.subscriptions) subscription.unsubscribe();
+    for (const subscription of this.subscriptions) { subscription.unsubscribe(); }
   }
 
   trackByFn(index: number, item: Supervisor) {
@@ -80,7 +78,7 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
   }
 
   updateSupervisorsArray(): void {
-    for (const supervisor of this.newSupervisors) this.supervisors.unshift(supervisor);
+    for (const supervisor of this.newSupervisors) { this.supervisors.unshift(supervisor); }
     this.newSupervisors = [];
 
     this.errorService.clearErrorOnPage();
@@ -88,13 +86,14 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
 
   onSupervisorDelete(_id: string): void {
     const confirmed = confirm(`Are you sure you want to delete this supervisor ?`);
-    if (!confirmed) return;
+    if (!confirmed) { return; }
 
     this.adminService.deleteSupervisor(_id)
       .subscribe(_ => this.removeSupervisor(_id),
         ({ status }: HttpErrorResponse) => {
-          if (status === 404)
+          if (status === 404) {
             this.removeSupervisor(_id);
+          }
         });
   }
 

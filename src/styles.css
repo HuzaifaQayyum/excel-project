@@ -180,7 +180,7 @@ table tr:hover {
   overflow: hidden !important;
 }
 
-.deleted-element { 
+.modified-element { 
   font-style: italic;
   color: gray;
   font-size: 15px;
@@ -301,6 +301,7 @@ table tr:hover {
   }
 
   .side-nav {
+    font-size: 15px;
     width: 40vw !important;
   }
 

@@ -1,11 +1,11 @@
-import { EntryNonPopulated } from '../../models/Entry-nonPopulated.model';
+import { EntryNonPopulated } from '../../../models/Entry-nonPopulated.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NotificationService } from '../../services/notification.service';
-import { SharedValidator } from '../../shared.validator';
+import { NotificationService } from '../../../services/notification.service';
+import { SharedValidator } from '../../../shared.validator';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { Supervisor } from '../../models/supervisor.model';
-import { MainService } from '../../services/main.service';
-import { Component, OnInit } from "@angular/core";
+import { Supervisor } from '../../../models/supervisor.model';
+import { MainService } from '../../../services/main.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
     templateUrl: './add-update-entry.component.html',
@@ -45,7 +45,7 @@ export class AddUpdateEntryComponent implements OnInit {
                     to: this.route.snapshot.queryParamMap.get('to'),
                     noOfHrs: parseInt(this.route.snapshot.queryParamMap.get('noOfHrs')),
                     date: this.formatDate(this.route.snapshot.queryParamMap.get('date'))
-                }
+                };
 
                 this.setEntryFormDefaults();
             }
@@ -61,12 +61,12 @@ export class AddUpdateEntryComponent implements OnInit {
             noOfHrs: this.entryData.noOfHrs,
             date: this.entryData.date
         });
-        this.entryForm.updateValueAndValidity()
+        this.entryForm.updateValueAndValidity();
     }
 
     private formatDate(_date: string): string {
         const date = new Date(_date);
-        return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
+        return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
     }
 
     initForm(): void {
@@ -89,35 +89,38 @@ export class AddUpdateEntryComponent implements OnInit {
         }
     }
 
-    private isNewDocument<T>({ controls }: FormGroup, data: T): boolean { 
-        for (const key in data) 
-            if (controls[key] && controls[key].value !== data[key]) return true;
+    private isNewDocument<T>({ controls }: FormGroup, data: T): boolean {
+        for (const key in data) {
+            if (controls[key] && controls[key].value !== data[key]) { return true; }
+        }
 
         return false;
     }
 
     onFormSubmit(): void {
         this.formSubmitted = true;
-        if (this.entryForm.invalid) return;
+        if (this.entryForm.invalid) { return; }
 
-        if (this.isUpdating) { 
-            if (!this.isNewDocument<EntryNonPopulated>(this.entryForm, this.entryData)) 
+        if (this.isUpdating) {
+            if (!this.isNewDocument<EntryNonPopulated>(this.entryForm, this.entryData)) {
                 return (this.serverMsg = 'Please make some changes to update document.') && null;
-            else if (this.serverMsg) this.serverMsg = null;
-            
+            }
+            else if (this.serverMsg) { this.serverMsg = null; }
+
             this.mainService.updateEntry(this.entryData._id, this.entryForm.value)
                     .subscribe(_ => this.onSuccessfullCreateUpdate(`Entry updated sucessfully`), this.onFailCreateUpdate);
-        } else
+        } else {
             this.mainService.uploadEntry(this.entryForm.value)
                 .subscribe(_ => this.onSuccessfullCreateUpdate(`Entry added successfully.`), this.onFailCreateUpdate);
+        }
     }
 
-    private onSuccessfullCreateUpdate(msg: string): void { 
+    private onSuccessfullCreateUpdate(msg: string): void {
         this.notificationService.add(msg);
         this.router.navigate(['/entry-managment']);
     }
 
-    private onFailCreateUpdate({ error: { to, from, noOfHrs, date, errorMsg } }): void { 
+    private onFailCreateUpdate({ error: { to, from, noOfHrs, date, errorMsg } }): void {
         this.serverMsg = to || from || noOfHrs || date || errorMsg;
     }
 }

@@ -6,8 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   { path: 'auth', canLoad: [AuthGuard], loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
-  { path: '', canLoad: [MainGuard], loadChildren: () => import('./main-site/main-site.module').then(m => m.MainSiteModule) },
-  { path: '**', redirectTo: '' }
+  { path: '', canLoad: [MainGuard], loadChildren: () => import('./main-site/main-site.module').then(m => m.MainSiteModule) }
 ];
 
 @NgModule({

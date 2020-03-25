@@ -42,7 +42,7 @@
       <tr *ngFor="let entry of entries">
         <td>
           {{ entry.from.name }}
-          <span class="deleted-element" *ngIf="entry.deleted || entry.updated">
+          <span class="modified-element" *ngIf="entry.deleted || entry.updated">
             {{ entry.deleted ? "(Deleted)" : "(updated)" }}
           </span>
         </td>

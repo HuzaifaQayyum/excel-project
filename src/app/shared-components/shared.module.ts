@@ -2,7 +2,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SearchComponent } from './search/search.component';
 import { NgModule } from '@angular/core';
 
-@NgModule({ 
+@NgModule({
     declarations: [ SearchComponent ],
     imports: [
         FormsModule,

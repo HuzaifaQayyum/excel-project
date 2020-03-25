@@ -21,12 +21,12 @@ export class ErrorService {
     }
 
 
-    setError(msg: string): void { 
+    setError(msg: string): void {
         this.onPageErrorAlert.next({ isServerError: true, msg });
     }
 
     handle404(record: any[], msg?: string): void {
-        if (record.length) return this.clearErrorOnPage();
+        if (record.length) { return this.clearErrorOnPage(); }
 
         this.onPageErrorAlert.next({ isServerError: true, msg: msg || 'No Record Found.' });
     }
@@ -34,10 +34,10 @@ export class ErrorService {
     handleHttpError({ status}: HttpErrorResponse, record?: any[], id?: string): void {
         switch (status) {
             case 0:
-                this.onPageErrorAlert.next({ isServerError: true, msg: 'Unable to connect to server. Make sure you have an active internet connection' });;
+                this.onPageErrorAlert.next({ isServerError: true, msg: 'Unable to connect to server. Make sure you have an active internet connection' });
                 break;
             case 500:
-                this.onPageErrorAlert.next({ isServerError: true, msg: 'Something went wrong. Please try again later. We will fix issues as soon as possible. Sorry for inconvinience' });;
+                this.onPageErrorAlert.next({ isServerError: true, msg: 'Something went wrong. Please try again later. We will fix issues as soon as possible. Sorry for inconvinience' });
                 break;
         }
     }

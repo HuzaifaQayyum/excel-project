@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { NotificationService } from '../../services/notification.service';
-import { AdminService } from '../../services/admin.service';
-import { SharedValidator } from '../../shared.validator';
+import { NotificationService } from '../../../../services/notification.service';
+import { AdminService } from '../../../../services/admin.service';
+import { SharedValidator } from '../../../../shared.validator';
 import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
@@ -65,10 +65,7 @@ export class AddUpdateSupervisor implements OnInit {
           this.onSupervisorFormSubmitted(`Supervisor updated successfully`);
           this.router.navigate(['/supervisors-managment']);
         }, e => this.onSupervisorFormSubmittedError(e));
-    }
-
-
-    else {
+    } else {
       this.adminService.createSupervisor(this.newSupervisorForm.value)
         .subscribe(_ => this.onSupervisorFormSubmitted(`Supervisor added successfully`), (e => this.onSupervisorFormSubmittedError(e)));
     }

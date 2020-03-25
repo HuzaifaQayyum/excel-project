@@ -98,6 +98,7 @@ header {
     position: fixed;
     top: var(--header-height);
     left: 0;
+    min-width: fit-content;
 }
 
 .main-section { 
@@ -108,6 +109,7 @@ header {
 
 .nav-wrapper { 
     margin-top: 10px;
+    white-space: nowrap;
 }
 
 .nav-item-link { 

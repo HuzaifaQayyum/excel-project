@@ -10,7 +10,7 @@
 
 <div class="add-new">
   <h4>Add new Supervisor</h4>
-  <button class="btn-add" routerLink="/supervisors-managment/add">+</button>
+  <button class="btn-add" routerLink="/admin/supervisors-managment/add">+</button>
 </div>
 
 <div *ngIf="isLoading; then Loading; else mainArea"></div>
@@ -33,12 +33,12 @@
         "
       >
         <td>
-          {{ supervisor.name }} <span class="deleted-element" *ngIf="supervisor.deleted || supervisor.updated">{{ supervisor.deleted ? "(Deleted)" : "(Updated)"}}</span>
+          {{ supervisor.name }} <span class="modified-element" *ngIf="supervisor.deleted || supervisor.updated">{{ supervisor.deleted ? "(Deleted)" : "(Updated)"}}</span>
         </td>
         <ng-container *ngIf="!supervisor.deleted">
           <td
             class="clickable"
-            routerLink="/supervisors-managment/update"
+            routerLink="/admin/supervisors-managment/update"
             [queryParams]="{ _id: supervisor._id, name: supervisor.name }"
           >
             <i class="fa fa-pen"></i>
