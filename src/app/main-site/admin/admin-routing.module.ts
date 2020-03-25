@@ -10,8 +10,7 @@ const routes: Routes = [
         path: '', canActivate: [AdminGuard], canActivateChild: [AdminGuard], children: [
             { path: 'supervisors-managment', component: SupervisorsManagmentComponent },
             { path: 'supervisors-managment/add', component: AddUpdateSupervisor },
-            { path: 'supervisors-managment/update', component: AddUpdateSupervisor },
-            { path: '**', redirectTo: '/admin/supervisors-managment' }
+            { path: 'supervisors-managment/update', component: AddUpdateSupervisor }
         ]
     }
 ];
