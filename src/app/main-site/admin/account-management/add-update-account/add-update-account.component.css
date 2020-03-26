@@ -7,16 +7,47 @@
 .form-group { 
     margin-bottom: 3vh;
     overflow: hidden;
-}
-
-.form-group { 
     display: flex;
     justify-content: space-between;
     align-items: baseline;
 }
 
+
 .form-group.check-box { 
     display: block;
+    position: relative;
+
+}
+
+.form-group.check-box input[type="checkbox"] { 
+    display: none;
+}
+
+.form-group.check-box label { 
+    user-select: none;
+}
+
+.form-group.check-box label:before { 
+    content: '';
+    background: #fff;
+    padding: 6px 12px;
+    cursor: pointer;
+    margin-right: 1vh;
+}
+
+.form-group.check-box input[type="checkbox"] ~ label:after { 
+    content: '\2714';
+    position: absolute;
+    left: 6px;
+    top: 0;
+    color: green;
+    max-width: 0;
+    overflow: hidden;
+    transition: max-width .1s ease-in;
+}
+
+.form-group.check-box input[type="checkbox"]:checked ~ label:after { 
+    max-width: 100px;
 }
 
 .control-wrapper { 

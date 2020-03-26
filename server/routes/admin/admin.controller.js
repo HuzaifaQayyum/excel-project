@@ -15,6 +15,7 @@ exports.fetchSupervisors = async (req, res, next) => {
     const supervisors = await Supervisor.find()
                                         .skip(itemsPerPage * pageNo)
                                         .limit(itemsPerPage)
+                                        .sort({ createdAt: -1 })
                                         .lean();
 
     return res.status(200).json(supervisors);
