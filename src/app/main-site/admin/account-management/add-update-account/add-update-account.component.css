@@ -43,7 +43,7 @@
     color: green;
     max-width: 0;
     overflow: hidden;
-    transition: max-width .1s ease-in;
+    transition: max-width .3s ease-in-out;
 }
 
 .form-group.check-box input[type="checkbox"]:checked ~ label:after { 

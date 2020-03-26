@@ -99,6 +99,7 @@ header {
     top: var(--header-height);
     left: 0;
     min-width: fit-content;
+    z-index: 111;
 }
 
 .main-section { 
