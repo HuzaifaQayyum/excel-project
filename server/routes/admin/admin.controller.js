@@ -128,10 +128,10 @@ exports.createAccount = async (req, res, next) => {
     const newUser = new User({ email, password: ' ', admin, verified: true, passwordResetString });
     await newUser.save();
     
-    const token = tokenGenerator({ email, passwordResetString }, verificationTokensValidTill)
+    const token = tokenGenerator({ email, passwordResetString, isSettingPassword: true }, verificationTokensValidTill)
 
     const html = `<a href="${clientUrl}/auth/reset-password/${token}">Submit credentials</a>`;
-
+    console.log(token);
     mailer.sendMail({
         to: email,
         from: companyEmailAddress,
