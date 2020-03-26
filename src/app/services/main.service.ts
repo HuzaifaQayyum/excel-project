@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { User } from '../models/User.model';
 import { Supervisor } from '../models/Supervisor.model';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import * as jwt_decode from 'jwt-decode';
 import { saveAs } from 'file-saver';
@@ -30,8 +30,12 @@ export class MainService {
         return this.http.post<Entry>(this.url + '/entries', formData);
     }
 
-    fetchEntries(): Observable<Entry[]> {
-        return this.http.get<Entry[]>(this.url + '/entries');
+    fetchEntries(pageNo = 0): Observable<Entry[]> {
+        return this.http.get<Entry[]>(this.url + '/entries', { params: new HttpParams().set('pageNo', pageNo.toString() ) });
+    }
+
+    fetchTotalPagesOfEntries(): Observable<{ pages: number }> { 
+        return this.http.get<{ pages: number }>(this.url + '/entries-no-of-pages');
     }
 
     updateEntry(_id: string, formData: EntryNonPopulated): Observable<EntryNonPopulated> {

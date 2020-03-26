@@ -70,6 +70,7 @@
         </ng-container>
       </tr>
     </table>
+    <button class="load-more" *ngIf="currentPageNo < totalNoOfPages" (click)="loadMoreEntries()" [disabled]="isLoadingMoreDocuments"> {{ isLoadingMoreDocuments ? "LOADING" : "Load more" }} </button>
   </div>
 
   <div *ngIf="serverError">

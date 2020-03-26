@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { Supervisor } from './../models/Supervisor.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Account } from '../models/Account.model';
 
@@ -9,6 +9,15 @@ export class AdminService {
     private url = 'http://localhost:4000/api/admin';
 
     constructor(private http: HttpClient) { }
+
+
+    fetchSupervisors(pageNo = 0): Observable<Supervisor[]> { 
+        return this.http.get<Supervisor[]>(this.url + '/supervisors', { params: new HttpParams().set('pageNo', pageNo.toString()) });
+    }
+
+    fetchTotalPagesOfSupervisors(): Observable<{ pages: number}> { 
+        return this.http.get<{ pages: number }>(this.url + '/supervisors-no-of-pages');
+    }
 
     createSupervisor(formData: Supervisor): Observable<Supervisor> {
         return this.http.post<Supervisor>(this.url + '/supervisors', formData);
@@ -22,8 +31,12 @@ export class AdminService {
         return this.http.delete<Supervisor>(this.url + `/supervisors/${_id}`);
     }
 
-    fetchAccounts(): Observable<Account[]> { 
-        return this.http.get<Account[]>(this.url + '/accounts');
+    fetchTotalPagesOfAccounts(): Observable<{ pages: number }> { 
+        return this.http.get<{ pages: number }>(this.url + '/accounts-no-of-pages');
+    }
+
+    fetchAccounts(pageNo = 0): Observable<Account[]> { 
+        return this.http.get<Account[]>(this.url + '/accounts', { params: new HttpParams().set('pageNo', pageNo.toString()) });
     }
 
     deleteAccount(_id: string): Observable<Account> { 

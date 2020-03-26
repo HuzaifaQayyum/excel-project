@@ -2,7 +2,7 @@ module.exports = app => {
     app.use((req, res, next) => res.status(404).json({ errorMsg: `Route not found.` }));
 
     app.use((err, req, res, next) => {
-        // console.log(err)
+        console.log(err)
         
         // Invalid json object error
         if (err.name === `SyntaxError`) return res.status(422).json({ errorMsg: `Invalid json object recieved.` });

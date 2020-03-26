@@ -18,6 +18,9 @@ export class EntryManagmentComponent implements OnInit, OnDestroy {
     serverMsg?: string;
     private subscriptions: Subscription[] = [];
     newEntries: Entry[] = [];
+    totalNoOfPages: number;
+    currentPageNo = 1;
+    isLoadingMoreDocuments: boolean;
 
     constructor(private mainService: MainService, private notificationService: NotificationService, private errorService: ErrorService, private socketService: SocketService) { }
 
@@ -30,6 +33,11 @@ export class EntryManagmentComponent implements OnInit, OnDestroy {
                 this.entries = entries;
             }, this.errorService.handleHttpError.bind(this.errorService));
 
+
+        this.mainService.fetchTotalPagesOfEntries()
+            .subscribe(({ pages }) => this.totalNoOfPages = pages);
+
+        // Error handling
         const subscrption1 = this.errorService.onPageErrorAlert.subscribe(({ isServerError, msg }) => {
             if (this.isLoading) { this.isLoading = false; }
 
@@ -63,6 +71,16 @@ export class EntryManagmentComponent implements OnInit, OnDestroy {
 
         const updatedEntryIndexInNewEntries = this.newEntries.findIndex(e => e._id === entry._id);
         if (updatedEntryIndexInNewEntries > -1) this.entries[updatedEntryIndexInNewEntries] = { ...entry, updated: true };
+    }
+
+    loadMoreEntries(): void {
+        this.isLoadingMoreDocuments = true;
+        this.mainService.fetchEntries(this.currentPageNo)
+            .subscribe(entries => {
+                this.entries.push(...entries);
+                this.currentPageNo++;
+                this.isLoadingMoreDocuments = false;
+            });
     }
 
     updateEntriesArray(): void {

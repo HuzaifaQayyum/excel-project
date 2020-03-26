@@ -49,6 +49,7 @@
         </ng-container>
       </tr>
     </table>
+    <button class="load-more" *ngIf="currentPageNo < totalNoOfPages" (click)="loadMoreSupervisors()" [disabled]="isLoadingMoreDocuments"> {{ isLoadingMoreDocuments ? "LOADING" : "Load more" }}</button>
   </div>
 
   <div *ngIf="serverError">

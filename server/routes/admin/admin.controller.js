@@ -7,7 +7,23 @@ const Entry = require('../../models/Entry');
 const User = require('../../models/User');
 const mailer = require('../../util/mailer');
 const tokenGenerator = require('../../util/tokenGenerator');
-const { clientUrl, companyEmailAddress, verificationTokensValidTill } = require('../../config/environment');
+const { clientUrl, companyEmailAddress, verificationTokensValidTill, itemsPerPage } = require('../../config/environment');
+
+exports.fetchSupervisors = async (req, res, next) => { 
+    const pageNo = (req.query.pageNo && parseInt(req.query.pageNo)) || 0;
+
+    const supervisors = await Supervisor.find()
+                                        .skip(itemsPerPage * pageNo)
+                                        .limit(itemsPerPage)
+                                        .lean();
+
+    return res.status(200).json(supervisors);
+};
+
+exports.fetchTotalNoOfSupervisorsPages = async (req, res, next) => { 
+    const pages = Math.ceil(await Supervisor.find().countDocuments() / itemsPerPage);
+    return res.status(200).json({ pages });
+};
 
 exports.createSupervisor = async (req, res, next) => {
     validationResult(req).throw();
@@ -65,10 +81,19 @@ exports.updateSupervisor = async (req, res, next) => {
     return res.status(200).json(supervisor);
 };
 
+exports.fetchTotalNoOfAccountsPages = async (req, res, next) => { 
+    const pages = Math.ceil(await User.find().countDocuments() / itemsPerPage);
+    return res.status(200).json({ pages });
+};
+
 exports.fetchAccounts = async (req, res, next) => {
-    const users = await User.find().select({ emailVerificationString: 0, password: 0, __v: 0 })
-                                    .sort({ admin: -1 })
-                                    .limit(50);
+    const pageNo = (req.query.pageNo && parseInt(req.query.pageNo)) || 0;
+
+    const users = await User.find()
+                                    .select({ emailVerificationString: 0, password: 0, __v: 0 })
+                                    .skip(itemsPerPage * pageNo)
+                                    .limit(itemsPerPage)
+                                    .sort({ admin: -1 });
 
     return res.status(200).json(users);
 };

@@ -5,6 +5,8 @@ const { Types: { ObjectId } } = require('mongoose');
 const Entry = require('../../models/Entry');
 const Supervisor = require('../../models/Supervisor');
 
+const {  itemsPerPage } = require('../../config/environment');
+
 exports.fetchSupervisors = async (req, res, next) => {
     const supervisors = await Supervisor.find()
         .sort({ _id: -1 })
@@ -31,13 +33,21 @@ exports.createEntry = async (req, res, next) => {
 
 
 exports.fetchEntries = async (req, res, next) => {
+    const pageNo = (req.query.pageNo && parseInt(req.query.pageNo)) || 0;
+
     const entries = await Entry.find()
-        .limit(50)
+        .skip(itemsPerPage * pageNo) // 1
+        .limit(itemsPerPage)
         .populate('from', { name: 1 })
         .populate('to', { name: 1 })
         .lean();
 
     return res.status(200).json(entries);
+};
+
+exports.fetchTotalNoOfPagesOfEntries = async (req, res, next) => { 
+    const pages = Math.ceil(await Entry.find().countDocuments() / itemsPerPage);
+    return res.status(200).json({ pages });
 };
 
 exports.deleteEntry = async (req, res, next) => {

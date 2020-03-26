@@ -19,6 +19,9 @@ export class AccountsManagementComponent implements OnInit, OnDestroy {
     newAccounts: Account[] = [];
     filteredAccounts: Account[] = [];
     isQuerying = false;
+    totalNoOfPages: number;
+    currentPageNo = 1;
+    isLoadingMoreDocuments: boolean;
 
     constructor(private adminService: AdminService, private errorService: ErrorService, private socketService: SocketService) { }
 
@@ -31,6 +34,11 @@ export class AccountsManagementComponent implements OnInit, OnDestroy {
                 this.accounts = accounts;
             });
 
+
+        this.adminService.fetchTotalPagesOfAccounts()
+            .subscribe(({ pages }) => this.totalNoOfPages = pages);
+
+        // Subscribing to error event
         const subsciption = this.errorService.onPageErrorAlert.subscribe(({ isServerError, msg }) => {
             this.isServerError = isServerError;
             this.serverMsg = msg;
@@ -65,6 +73,16 @@ export class AccountsManagementComponent implements OnInit, OnDestroy {
 
         const updatedAcccountindexInNewEntries = this.newAccounts.findIndex(e => e._id === account._id);
         if (updatedAcccountindexInNewEntries > -1) this.newAccounts[updatedAcccountindexInNewEntries] = { ...account, updated: true };
+    }
+
+    loadMoreAccounts(): void { 
+        this.isLoadingMoreDocuments = true;
+        this.adminService.fetchAccounts(this.currentPageNo)
+            .subscribe(accounts => { 
+                this.accounts.push(...accounts);
+                this.currentPageNo++;
+                this.isLoadingMoreDocuments = false;
+            });
     }
 
     updateAccountsArray(): void {

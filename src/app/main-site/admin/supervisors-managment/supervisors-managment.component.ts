@@ -21,17 +21,23 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
   serverMsg?: string;
   private subscriptions: Subscription[] = [];
   newSupervisors: Supervisor[] = [];
+  totalNoOfPages: number;
+  currentPageNo = 1;
+  isLoadingMoreDocuments: boolean;
 
   constructor(private adminService: AdminService, private mainService: MainService, private socketService: SocketService, private errorService: ErrorService) { }
 
   ngOnInit(): void {
-    this.mainService.fetchSupervisors()
+    this.adminService.fetchSupervisors()
       .subscribe(supervisors => {
         this.isLoading = false;
         this.errorService.handle404(supervisors);
 
         this.supervisors = supervisors;
       }, this.errorService.handleHttpError.bind(this.errorService));
+
+    this.adminService.fetchTotalPagesOfSupervisors()
+      .subscribe(({ pages }) => this.totalNoOfPages = pages);
 
 
     // Subscribing to Error Event
@@ -60,13 +66,24 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
 
   private onUpdateSupervisorEvent(supervisor: Supervisor): void {
     const updatedSupervisorIndex = this.supervisors.findIndex(e => e._id === supervisor._id);
-    if (updatedSupervisorIndex > -1) { 
-      this.supervisors[updatedSupervisorIndex] = { ...supervisor, updated: true }; 
+    if (updatedSupervisorIndex > -1) {
+      this.supervisors[updatedSupervisorIndex] = { ...supervisor, updated: true };
       return;
     }
 
     const indexInUpdatedSupervisors = this.newSupervisors.findIndex(e => e._id === supervisor._id);
     if (updatedSupervisorIndex > -1) this.newSupervisors[indexInUpdatedSupervisors] = { ...supervisor, updated: true };
+  }
+
+  loadMoreSupervisors(): void { 
+    this.isLoadingMoreDocuments = true;
+
+    this.adminService.fetchSupervisors(this.currentPageNo)
+      .subscribe(supervisors => { 
+        this.supervisors.push(...supervisors);
+        this.currentPageNo++;
+        this.isLoadingMoreDocuments = false;
+      })
   }
 
   ngOnDestroy(): void {
