@@ -1,12 +1,10 @@
 const jwt_validator = require('express-jwt');
 const router = require('express').Router();
 
-const { jwtPassword } = require('../../config/environment');
-
 const { createSupervisor, updateSupervisor, deleteSupervisor, fetchAccounts, deleteAccount, createAccount, updateAccount, fetchTotalNoOfSupervisorsPages, fetchSupervisors, fetchTotalNoOfAccountsPages } = require('./admin.controller');
 const { createAndUpdateSupervisorValidator, createUpdateAccountValidator } = require('./admin.validator');
 
-router.use(jwt_validator({ secret: jwtPassword }));
+router.use(jwt_validator({ secret: process.env.jwtPassword }));
 router.use((req, res, next) => req.user.admin && req.user.verified ? next() : res.status(401).end());
 
 router.get('/supervisors', fetchSupervisors);

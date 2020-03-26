@@ -15,7 +15,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.authService.authenticateUser();
-    this.errorServie.popupErrorAlert.subscribe(error => this.errors.push(error));
+    this.errorServie.popupErrorAlert.subscribe(error => {
+      if (this.errors.find(e => e.msg === error.msg)) return;
+      
+      this.errors.push(error);
+    });
   }
 
   closeError(_id: number): void {

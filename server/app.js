@@ -1,11 +1,11 @@
-const jwt = require('jsonwebtoken');
+const join_path = require('./util/join-path');
+
+require('dotenv').config({ path: join_path('config', '.env')});
+require('express-async-errors');
 const socketIO = require('socket.io');
 const http = require('http');
-require('express-async-errors');
 const cors = require('cors');
 const express = require('express');
-
-const { jwtPassword } = require('./config/environment');
 
 const app = express();
 
@@ -25,8 +25,6 @@ require('./startup/route-handler')(app);
 require('./startup/error-handler')(app);
 
 require('./startup/db')(server);
-
-server.addListener('listening', _ => console.log(`Listening Now...`));
 
 io.on('connect', socket => {
     console.log(`User connected`);

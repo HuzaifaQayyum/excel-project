@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as jwt_decode from 'jwt-decode';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 interface AuthFormData {
     email: string;
@@ -13,7 +14,7 @@ interface AuthFormData {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-    private url = 'http://localhost:4000/api/auth';
+    private url = `${environment.serverUrl}/auth`;
     serverMsg = new Subject<string>();
     isServerError = new Subject<boolean>();
     private _authenticated = false;
@@ -65,8 +66,7 @@ export class AuthService {
             if (verified && timeLeft > 0) {
                 this.authenticated = true;
                 this.mainService.setUser();
-                // FIX HERE -> setTimout(this.logoutUser, timeLeft) <- should be this
-                setTimeout(() => this.logoutUser, timeLeft);
+                setTimeout(_ => this.logoutUser, timeLeft);
                 this.router.navigate(['/home']);
                 return;
             }

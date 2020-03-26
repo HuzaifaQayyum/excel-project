@@ -9,7 +9,6 @@ const {
     companyEmailAddress, 
     verificationTokensValidTill,
     mainTokenValidTill,
-    jwtPassword,
     clientUrl } = require('../../config/environment');
 
 const tokenGenerator = require('../../util/tokenGenerator');
@@ -61,7 +60,7 @@ exports.verifyUser = async (req, res, next) => {
     validationResult(req).throw();
 
     const { token } = req.body;
-    const { email, emailVerificationString } = jwt.verify(token, jwtPassword);
+    const { email, emailVerificationString } = jwt.verify(token, process.env.jwtPassword);
 
     const user = await User.findOne({ email, verified: false, emailVerificationString });
     if (!user) return res.status(404).json({ errorMsg: `User not found.` });
@@ -121,7 +120,7 @@ exports.resetPassword = async (req, res, next) => {
     validationResult(req).throw();
 
     const { token, newPassword } = req.body;
-    const { email, passwordResetString } = jwt.verify(token, jwtPassword);
+    const { email, passwordResetString } = jwt.verify(token, process.env.jwtPassword);
     
     const user = await User.findOne({ email, verified: true, passwordResetString });
     if (!user) return res.status(404).json({ errorMsg: `User not found.` });

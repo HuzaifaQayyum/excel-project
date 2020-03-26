@@ -30,7 +30,8 @@
 .form-group.check-box label:before { 
     content: '';
     background: #fff;
-    padding: 6px 12px;
+    padding: 0 10px;
+    font-size: 12px;
     cursor: pointer;
     margin-right: 1vh;
 }
@@ -38,8 +39,8 @@
 .form-group.check-box input[type="checkbox"] ~ label:after { 
     content: '\2714';
     position: absolute;
-    left: 6px;
-    top: 0;
+    left: 3px;
+    top: 1px;
     color: green;
     max-width: 0;
     overflow: hidden;

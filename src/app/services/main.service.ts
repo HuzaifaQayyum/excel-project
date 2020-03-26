@@ -8,10 +8,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import * as jwt_decode from 'jwt-decode';
 import { saveAs } from 'file-saver';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class MainService {
-    private url = 'http://localhost:4000/api/main';
+    private url = `${environment.serverUrl}/main`;
     private _user: User;
 
     get user(): User { return this._user; }
