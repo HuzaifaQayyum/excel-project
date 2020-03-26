@@ -1,10 +1,13 @@
+const crypto = require('crypto');
 const { Types: { ObjectId } } = require('mongoose');
 const { validationResult } = require('express-validator');
 
 const Supervisor = require('../../models/Supervisor');
 const Entry = require('../../models/Entry');
 const User = require('../../models/User');
-
+const mailer = require('../../util/mailer');
+const tokenGenerator = require('../../util/tokenGenerator');
+const { clientUrl, companyEmailAddress, verificationTokensValidTill } = require('../../config/environment');
 
 exports.createSupervisor = async (req, res, next) => {
     validationResult(req).throw();
@@ -82,6 +85,64 @@ exports.deleteAccount = async (req, res, next) => {
     await account.remove();
 
     req.io.emit('delete-account', account);
+
+    return res.status(200).json(account);
+};
+
+exports.createAccount = async (req, res, next) => { 
+    validationResult(req).throw();
+
+    const { email, isAdmin: admin } = req.body;
+
+    const existingAccount = await User.findOne({ email, verified: true });
+    if (existingAccount) return res.status(409).json({ errorMsg: `Email already exists` });
+    
+    const passwordResetString = crypto.randomBytes(12).toString('hex');
+
+    const newUser = new User({ email, password: ' ', admin, verified: true, passwordResetString });
+    await newUser.save();
+    
+    const token = tokenGenerator({ email, passwordResetString }, verificationTokensValidTill)
+
+    const html = `<a href="${clientUrl}/auth/reset-password/${token}">Submit credentials</a>`;
+
+    mailer.sendMail({
+        to: email,
+        from: companyEmailAddress,
+        subject: `Submit Credentials`,
+        html
+    })
+
+    const responseUserInfo = { _id: newUser._id, email, admin, verified: newUser.verified, createdAt: newUser.createdAt };
+
+    req.io.emit('new-account', responseUserInfo);
+
+    return res.status(201).json(responseUserInfo);
+};
+
+exports.updateAccount = async (req, res, next) => { 
+    validationResult(req).throw();
+
+    let { _id }= req.params;
+    const { email, isAdmin: admin } = req.body;
+
+    const account = await User.findOne({ _id, verified: true }, { email: 1, admin: 1, verified: 1, createdAt: 1 });
+    if (!account) return res.status(404).json({ errorMsg: `Account not found.` });
+
+    if (!(
+        account.email !== email ||
+        account.admin !== admin
+        )) {
+        return res.status(422).json({ errorMsg: `please modify data first.` });
+    }
+
+    account.set({ 
+        email,
+        admin
+    });
+    await account.save();
+
+    req.io.emit('update-account', account);
 
     return res.status(200).json(account);
 };

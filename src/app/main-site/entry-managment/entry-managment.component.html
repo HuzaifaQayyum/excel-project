@@ -48,7 +48,7 @@
         </td>
         <td>{{ entry.to.name }}</td>
         <td>{{ entry.noOfHrs }}</td>
-        <td>{{ entry.date | date: "fullDate" }}</td>
+        <td>{{ entry.date | date }}</td>
         <ng-container *ngIf="!entry.deleted">
           <td
             class="clickable"

@@ -7,21 +7,21 @@ import { NgModule } from "@angular/core";
 
 import { SupervisorsManagmentComponent } from './supervisors-managment/supervisors-managment.component';
 import { AddUpdateSupervisor } from './supervisors-managment/add-update-supervisor/add-update-supervisor.component';
-import { CustomPipes } from '../../pipes/pipe.module';
+import { AddUpdateAccountComponent } from './account-management/add-update-account/add-update-account.component';
 
 @NgModule({ 
     declarations: [
         SupervisorsManagmentComponent,
         AddUpdateSupervisor,
-        AccountsManagementComponent
+        AccountsManagementComponent,
+        AddUpdateAccountComponent
     ],
     imports: [
         AdminRoutingModule,
         SharedModule,
         FormsModule,
         ReactiveFormsModule,
-        CommonModule,
-        CustomPipes
+        CommonModule
     ]
 })
 export class AdminModule { }

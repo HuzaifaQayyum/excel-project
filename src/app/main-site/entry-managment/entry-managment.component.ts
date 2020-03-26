@@ -56,7 +56,13 @@ export class EntryManagmentComponent implements OnInit, OnDestroy {
 
     private onUpdateEntryEvent(entry: Entry): void {
         const updatedEntryIndex = this.entries.findIndex(e => e._id === entry._id);
-        if (updatedEntryIndex > -1) { this.entries[updatedEntryIndex] = { ...entry, updated: true }; }
+        if (updatedEntryIndex > -1) {
+            this.entries[updatedEntryIndex] = { ...entry, updated: true };
+            return;
+        }
+
+        const updatedEntryIndexInNewEntries = this.newEntries.findIndex(e => e._id === entry._id);
+        if (updatedEntryIndexInNewEntries > -1) this.entries[updatedEntryIndexInNewEntries] = { ...entry, updated: true };
     }
 
     updateEntriesArray(): void {

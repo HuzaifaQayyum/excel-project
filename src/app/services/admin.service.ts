@@ -29,4 +29,12 @@ export class AdminService {
     deleteAccount(_id: string): Observable<Account> { 
         return this.http.delete<Account>(this.url + `/accounts/${_id}`);
     }
+
+    createAccount(formData: { email: string, isAdmin: boolean }): Observable<Account> { 
+        return this.http.post<Account>(this.url + '/accounts', formData);
+    }
+
+    updateAccount(_id: string, formData: { email: string, isAdmin: boolean }): Observable<Account> { 
+        return this.http.put<Account>(this.url + `/accounts/${_id}`, formData);
+    }
 }

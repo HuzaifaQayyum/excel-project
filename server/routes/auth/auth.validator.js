@@ -48,14 +48,18 @@ exports.resetPasswordValidator = [
         .withMessage(`Please submit valid token`),
 
     body('newPassword')
-        .notEmpty({ ignore_whitespace: true })
+        .trim()
+        
+        .notEmpty()
         .withMessage(`Password is required`)
 
         .isLength({ min: 5 })
         .withMessage(`Password must be at least 5 characters long.`),
 
     body('confirmNewPassword')
-        .notEmpty({ ignore_whitespace: true })
+        .trim()
+        
+        .notEmpty()
         .withMessage(`Confirm Password is required`)
 
         .isLength({ min: 5 })

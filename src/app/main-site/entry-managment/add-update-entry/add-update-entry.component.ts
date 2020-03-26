@@ -89,7 +89,7 @@ export class AddUpdateEntryComponent implements OnInit {
         }
     }
 
-    private isNewDocument<T>({ controls }: FormGroup, data: T): boolean {
+    private isNewDocument({ controls }: FormGroup, data: any): boolean {
         for (const key in data) {
             if (controls[key] && controls[key].value !== data[key]) { return true; }
         }
@@ -102,7 +102,7 @@ export class AddUpdateEntryComponent implements OnInit {
         if (this.entryForm.invalid) { return; }
 
         if (this.isUpdating) {
-            if (!this.isNewDocument<EntryNonPopulated>(this.entryForm, this.entryData)) {
+            if (!this.isNewDocument(this.entryForm, this.entryData)) {
                 return (this.serverMsg = 'Please make some changes to update document.') && null;
             }
             else if (this.serverMsg) { this.serverMsg = null; }

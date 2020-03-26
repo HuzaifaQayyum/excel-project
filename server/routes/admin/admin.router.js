@@ -3,8 +3,8 @@ const router = require('express').Router();
 
 const { jwtPassword } = require('../../config/environment');
 
-const { createSupervisor, updateSupervisor, deleteSupervisor, fetchAccounts, deleteAccount } = require('./admin.controller');
-const { createAndUpdateSupervisorValidator } = require('./admin.validator');
+const { createSupervisor, updateSupervisor, deleteSupervisor, fetchAccounts, deleteAccount, createAccount, updateAccount } = require('./admin.controller');
+const { createAndUpdateSupervisorValidator, createUpdateAccountValidator } = require('./admin.validator');
 
 router.use(jwt_validator({ secret: jwtPassword }));
 router.use((req, res, next) => req.user.admin && req.user.verified ? next() : res.status(401).end());
@@ -14,5 +14,7 @@ router.put('/supervisors/:_id', createAndUpdateSupervisorValidator, updateSuperv
 router.delete('/supervisors/:_id', deleteSupervisor);
 router.get('/accounts', fetchAccounts);
 router.delete('/accounts/:_id', deleteAccount);
+router.post('/accounts', createUpdateAccountValidator, createAccount);
+router.put('/accounts/:_id', createUpdateAccountValidator, updateAccount);
 
 module.exports = router;

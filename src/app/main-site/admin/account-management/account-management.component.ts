@@ -41,8 +41,9 @@ export class AccountsManagementComponent implements OnInit, OnDestroy {
         this.subscriptions.push(subsciption);
 
         // Realtime support
-        this.socketService.connection.on('delete-account', this.onDeleteAccountEvent.bind(this));
         this.socketService.connection.on('new-account', this.onNewAccountEvent.bind(this));
+        this.socketService.connection.on('update-account', this.onUpdateAccountEvent.bind(this));
+        this.socketService.connection.on('delete-account', this.onDeleteAccountEvent.bind(this));
     }
 
     private onDeleteAccountEvent(account: Account): void {
@@ -53,6 +54,17 @@ export class AccountsManagementComponent implements OnInit, OnDestroy {
 
     private onNewAccountEvent(account: Account): void {
         this.newAccounts.push(account);
+    }
+
+    private onUpdateAccountEvent(account: Account): void {
+        const updatedAccountIndex = this.accounts.findIndex(e => e._id === account._id);
+        if (updatedAccountIndex > -1) {
+            this.accounts[updatedAccountIndex] = { ...account, updated: true };
+            return;
+        }
+
+        const updatedAcccountindexInNewEntries = this.newAccounts.findIndex(e => e._id === account._id);
+        if (updatedAcccountindexInNewEntries > -1) this.newAccounts[updatedAcccountindexInNewEntries] = { ...account, updated: true };
     }
 
     updateAccountsArray(): void {

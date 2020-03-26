@@ -17,8 +17,8 @@ export class DownloadReportComponent implements OnInit {
 
     ngOnInit(): void {
         this.reportForm = new FormGroup({
-            from: new FormControl('2002-05-12', Validators.required),
-            to: new FormControl('2022-05-12', Validators.required)
+            from: new FormControl('', Validators.required),
+            to: new FormControl('', Validators.required)
         });
     }
 

@@ -60,7 +60,13 @@ export class SupervisorsManagmentComponent implements OnInit, OnDestroy {
 
   private onUpdateSupervisorEvent(supervisor: Supervisor): void {
     const updatedSupervisorIndex = this.supervisors.findIndex(e => e._id === supervisor._id);
-    if (updatedSupervisorIndex > -1) { this.supervisors[updatedSupervisorIndex] = { ...supervisor, updated: true }; }
+    if (updatedSupervisorIndex > -1) { 
+      this.supervisors[updatedSupervisorIndex] = { ...supervisor, updated: true }; 
+      return;
+    }
+
+    const indexInUpdatedSupervisors = this.newSupervisors.findIndex(e => e._id === supervisor._id);
+    if (updatedSupervisorIndex > -1) this.newSupervisors[indexInUpdatedSupervisors] = { ...supervisor, updated: true };
   }
 
   ngOnDestroy(): void {

@@ -11,14 +11,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./add-update-supervisor.component.css']
 })
 export class AddUpdateSupervisor implements OnInit {
-  newSupervisorForm: FormGroup;
+  supervisorForm: FormGroup;
   isFormSubmitted = false;
   serverMsg: string;
   _id: string;
   backupName: string;
   isEditing = false;
 
-  get name(): AbstractControl { return this.newSupervisorForm.get('name'); }
+  get name(): AbstractControl { return this.supervisorForm.get('name'); }
 
   constructor(private route: ActivatedRoute, private router: Router, private adminService: AdminService, private notificationService: NotificationService) { }
 
@@ -32,14 +32,14 @@ export class AddUpdateSupervisor implements OnInit {
       this.isEditing = true;
     }
 
-    this.newSupervisorForm = new FormGroup({
+    this.supervisorForm = new FormGroup({
       name: new FormControl(name, SharedValidator.required)
     });
   }
 
   resetSupervisorData(): void {
-    this.newSupervisorForm.patchValue({ name: this.backupName });
-    this.newSupervisorForm.updateValueAndValidity();
+    this.supervisorForm.patchValue({ name: this.backupName });
+    this.supervisorForm.updateValueAndValidity();
   }
 
   private onSupervisorFormSubmitted(msg: string): void {
@@ -48,25 +48,25 @@ export class AddUpdateSupervisor implements OnInit {
     this.notificationService.add(msg);
 
     this.isFormSubmitted = false;
-    this.newSupervisorForm.reset();
+    this.supervisorForm.reset();
   }
 
   private onSupervisorFormSubmittedError({ error: { errorMsg } }): void {
     this.serverMsg = errorMsg;
   }
 
-  onCreateSupervisor(): void {
+  onCreateUpdateSupervisor(): void {
     this.isFormSubmitted = true;
-    if (this.newSupervisorForm.invalid) { return; }
+    if (this.supervisorForm.invalid) { return; }
 
     if (this.isEditing) {
-      this.adminService.updateSupervisor(this._id, this.newSupervisorForm.value)
+      this.adminService.updateSupervisor(this._id, this.supervisorForm.value)
         .subscribe(_ => {
           this.onSupervisorFormSubmitted(`Supervisor updated successfully`);
-          this.router.navigate(['/supervisors-managment']);
+          this.router.navigate(['/admin/supervisors-managment']);
         }, e => this.onSupervisorFormSubmittedError(e));
     } else {
-      this.adminService.createSupervisor(this.newSupervisorForm.value)
+      this.adminService.createSupervisor(this.supervisorForm.value)
         .subscribe(_ => this.onSupervisorFormSubmitted(`Supervisor added successfully`), (e => this.onSupervisorFormSubmittedError(e)));
     }
   }
