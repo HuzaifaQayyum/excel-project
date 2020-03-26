@@ -25,7 +25,3 @@ require('./startup/route-handler')(app);
 require('./startup/error-handler')(app);
 
 require('./startup/db')(server);
-
-io.on('connect', socket => {
-    console.log(`User connected`);
-});
