@@ -19,7 +19,7 @@ export class AuthService {
     isServerError = new Subject<boolean>();
     private _authenticated = false;
 
-    get token(): string { return localStorage.getItem('token') || null; }
+    get token(): string { return localStorage.getItem('token') || sessionStorage.getItem('token') || null; }
     get authenticated(): boolean { return this._authenticated; }
     set authenticated(authenticated: boolean) { this._authenticated = authenticated; }
 
@@ -30,10 +30,13 @@ export class AuthService {
         this.serverMsg.next(msg);
     }
 
-    login(formData: AuthFormData): void {
+    login(formData: AuthFormData, remember: boolean): void {
         this.http.post<{ token: string }>(this.url + '/login', formData)
             .subscribe(
-                ({ token }) => this.saveTokenAndRedirect(token),
+                ({ token }) => {
+                    if (remember) this.saveTokenAndRedirect(token);
+                    else this.saveTokenTemporaryAndRedirect(token);
+                },
                 ({ error: { errorMsg } }) => this.changeServerMsg(errorMsg, true)
             );
     }
@@ -79,9 +82,15 @@ export class AuthService {
         localStorage.setItem('token', token);
         this.authenticateUser(token);
     }
+    
+    saveTokenTemporaryAndRedirect(token: string): void {
+        sessionStorage.setItem('token', token);
+        this.authenticateUser(token);
+    }
 
     logoutUser() {
         localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
         this.authenticated = false;
         this.router.navigate(['/auth']);
     }

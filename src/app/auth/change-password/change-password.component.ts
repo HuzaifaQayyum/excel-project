@@ -39,8 +39,8 @@ export class ChangePassordComponent implements OnInit {
                 this.serverMsg = errorMsg;
                 this.isServerError = true;
                 if (status === 404) {
-                    // alert(`Invalid token or token already used. Redirect?`);
-                    // this.router.navigate(['/auth']);
+                    alert(`Invalid token or token already used. Redirect?`);
+                    this.router.navigate(['/auth']);
                  }
             });
     }

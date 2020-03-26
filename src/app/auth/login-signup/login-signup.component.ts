@@ -15,6 +15,7 @@ export class LoginSignupComponent implements OnInit, OnDestroy {
   loginMode = true;
   isFormSubmitted = false;
   private subscriptions: Subscription[] = [];
+  rememberMe: FormControl;
 
   get email(): AbstractControl { return this.authForm.get('email'); }
   get password(): AbstractControl { return this.authForm.get('password'); }
@@ -27,6 +28,8 @@ export class LoginSignupComponent implements OnInit, OnDestroy {
       password: new FormControl('', [Validators.minLength(5), Validators.required])
     });
 
+    this.rememberMe = new FormControl(true);
+    
     this.subscriptions.push(this.authService.serverMsg.subscribe(msg => {
       this.serverMsg = msg;
       if (!this.isServerError) { this.authForm.reset(); this.isFormSubmitted = false; }
@@ -42,8 +45,11 @@ export class LoginSignupComponent implements OnInit, OnDestroy {
     this.isFormSubmitted = true;
     if (this.authForm.invalid) { return console.log(`Invalid form`); }
 
-    const authFunc = this.loginMode ? this.authService.login : this.authService.signup;
-    authFunc.call(this.authService, this.authForm.value);
+    if (this.loginMode) { 
+      this.authService.login(this.authForm.value, this.rememberMe.value);
+    } else { 
+      this.authService.signup(this.authForm.value);
+    }
   }
 
 }
