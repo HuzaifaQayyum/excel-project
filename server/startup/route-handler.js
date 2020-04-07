@@ -1,7 +1,7 @@
 const authRouter = require('../routes/auth/auth.router');
 const mainRouter = require('../routes/main/main.router');
 const adminRouter = require('../routes/admin/admin.router');
-
+``
 module.exports = app => { 
     app.use('/api/auth', authRouter);
     app.use('/api/main', mainRouter);

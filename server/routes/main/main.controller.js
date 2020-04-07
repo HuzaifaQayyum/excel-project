@@ -1,11 +1,14 @@
+const webpush = require('web-push');
 const excel = require('exceljs');
 const { validationResult } = require('express-validator');
 const { Types: { ObjectId } } = require('mongoose');
 
 const Entry = require('../../models/Entry');
 const Supervisor = require('../../models/Supervisor');
+const PushSubscription = require('../../models/PushSubscription');
 
-const {  itemsPerPage } = require('../../config/environment');
+const { itemsPerPage } = require('../../config/environment');
+const sendNotification = require('../../util/notification-sender');
 
 exports.fetchSupervisors = async (req, res, next) => {
     const supervisors = await Supervisor.find()
@@ -28,6 +31,11 @@ exports.createEntry = async (req, res, next) => {
 
     req.io.emit('new-entry', entry);
 
+    const pushSubscriptions = await PushSubscription.find();
+
+    for (const subscription of pushSubscriptions)
+        await sendNotification(subscription, { title: `New entry.`, body: `New Entry created.`, adminId: req.user._id, dontShowToAdmin: true });
+
     return res.status(201).json(entry);
 };
 
@@ -45,7 +53,7 @@ exports.fetchEntries = async (req, res, next) => {
     return res.status(200).json(entries);
 };
 
-exports.fetchTotalNoOfPagesOfEntries = async (req, res, next) => { 
+exports.fetchTotalNoOfPagesOfEntries = async (req, res, next) => {
     const pages = Math.ceil(await Entry.find().countDocuments() / itemsPerPage);
     return res.status(200).json({ pages });
 };
@@ -59,7 +67,7 @@ exports.deleteEntry = async (req, res, next) => {
 
     const entry = await Entry.findOneAndDelete({ _id });
     if (!entry) return res.status(404).json({ errorMsg: `Entry not found.` });
-    
+
     req.io.emit('delete-entry', entry);
 
     return res.status(200).json(entry);
@@ -193,6 +201,15 @@ exports.getReport = async (req, res, next) => {
     return res.end();
 };
 
+exports.registerNotification = async (req, res, next) => {
+    validationResult(req).throw();
+
+    const { subscription } = req.body;
+    const newPushSubs = new PushSubscription(subscription);
+    await newPushSubs.save();
+
+    return res.status(201).json(newPushSubs);
+};
 
 
 /* Solution Two **/

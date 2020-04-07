@@ -80,3 +80,18 @@ exports.getReportValidator = [
         })
         .toDate()
 ]
+
+exports.notificationValidator = [
+    body('subscription')
+        .custom((val) => {
+            if (!val) throw new Error(`Subscription is requried`);
+            else if (typeof val !== 'object') throw new Error(`Subscripton should be an object`);
+            else if (!val.endpoint) throw new Error(`Subscription should have an endpoint`);
+            else if(!val.keys) throw new Error(`Subscription should have keys`);
+            else if (!val.keys.auth) throw new Error(`Subscription should have auth key.`);
+            else if (!val.keys.p256dh) throw new Error(`Subscription should have p256dh key`);
+
+            return true;
+        })
+        
+];

@@ -71,7 +71,7 @@ export class AddUpdateEntryComponent implements OnInit {
 
     initForm(): void {
         this.entryForm = new FormGroup({
-            date: new FormControl('', Validators.required),
+            date: new FormControl('2002-02-12', Validators.required),
             noOfHrs: new FormControl(1, [Validators.required, Validators.min(1), SharedValidator.isInt]),
             from: new FormControl(this.supervisors[0]?._id, Validators.required),
             to: new FormControl(this.supervisors[1]?._id, Validators.required)

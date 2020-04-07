@@ -3,7 +3,7 @@ import { Entry } from './../models/Entry.model';
 import { AuthService } from './auth.service';
 import { User } from '../models/User.model';
 import { Supervisor } from '../models/Supervisor.model';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import * as jwt_decode from 'jwt-decode';
@@ -54,5 +54,10 @@ export class MainService {
             const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;' });
             saveAs(blob, `${from}-${to}`);
         });
+    }
+
+    registerPushNotification(subscription: PushSubscription): void { 
+        this.http.post(this.url + '/notifications',  { subscription })
+            .subscribe(res => console.log(res), err => console.log(err));
     }
 }
